@@ -1,0 +1,112 @@
+/* ------------------------------------------------------------------
+   HAARSCHARF. — Rechtsseiten
+   Bewusst ruhig gehalten: hier wird gelesen, nicht bestaunt.
+   ------------------------------------------------------------------ */
+
+.legal {
+  max-width: 46rem;
+  margin-inline: auto;
+  padding: clamp(7rem, 14vh, 10rem) var(--gutter) clamp(4rem, 8vw, 7rem);
+}
+
+.legal__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  font-size: var(--fs-sm);
+  color: var(--bone-mute);
+  transition: color var(--t-fast) var(--ease);
+}
+.legal__back:hover { color: var(--acid); }
+
+.legal h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  line-height: 0.9;
+  letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.legal h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.35rem, 3vw, 1.85rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  margin-block: clamp(2.5rem, 5vw, 3.5rem) 0.9rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.legal h3 {
+  font-size: var(--fs-body);
+  font-weight: 600;
+  margin-block: 1.75rem 0.5rem;
+}
+
+.legal p, .legal li { color: var(--bone-mute); }
+.legal p + p { margin-top: 0.9rem; }
+
+.legal ul {
+  display: grid;
+  gap: 0.5rem;
+  margin-block: 0.9rem;
+  padding-left: 1.15rem;
+  list-style: disc;
+}
+.legal ul li::marker { color: var(--acid); }
+
+.legal a {
+  color: var(--bone);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--line);
+  transition: color var(--t-fast) var(--ease), text-decoration-color var(--t-fast) var(--ease);
+}
+.legal a:hover { color: var(--acid); text-decoration-color: var(--acid); }
+
+.legal address { font-style: normal; line-height: 1.8; color: var(--bone-mute); }
+
+/* Jeder noch auszufüllende Wert ist unübersehbar markiert.
+   Diese Seite darf mit diesen Markierungen nicht live gehen. */
+.ph {
+  display: inline-block;
+  padding: 0.05em 0.45em;
+  background: rgba(255, 107, 94, 0.14);
+  border: 1px dashed #ff6b5e;
+  color: #ff8f85;
+  font-size: 0.9em;
+  font-weight: 600;
+  border-radius: var(--radius);
+}
+
+/* Warnbanner am Kopf der Rechtsseiten. */
+.notice {
+  display: grid;
+  gap: 0.6rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--acid);
+  background: rgb(var(--acid-rgb) / 0.06);
+}
+.notice__title {
+  font-size: var(--fs-mono);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--acid);
+}
+.notice p { font-size: var(--fs-sm); color: var(--bone-mute); }
+.notice strong { color: var(--bone); }
+
+.legal__meta {
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-sm);
+  color: var(--bone-faint);
+}
