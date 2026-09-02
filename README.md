@@ -23,13 +23,13 @@ python3 -m http.server 8000
 
 ## Veröffentlichen (GitHub Pages)
 
-Alles ist vorbereitet — **ein Schritt fehlt noch**, und der geht nur über die
-Repository-Einstellungen:
+Die Seite ist veröffentlicht und erreichbar unter
+**https://cs67pzk79g-sys.github.io/Friseur/** — der Workflow läuft bei jedem Push
+auf den Standard-Branch.
+
+Für ein neues Repository ist einmalig nötig:
 
 > **Settings → Pages → Build and deployment → Source → „GitHub Actions“**
-
-Danach läuft der Workflow bei jedem Push automatisch, und die Seite steht unter
-`https://cs67pzk79g-sys.github.io/Friseur/`.
 
 Wer lieber ohne Actions arbeitet, wählt stattdessen unter *Source* den Eintrag
 „Deploy from a branch“, den Standard-Branch und den Ordner `/ (root)`. Dann ist
@@ -75,6 +75,8 @@ Wurzelverzeichnis anlegen und den DNS-Eintrag auf GitHub zeigen lassen.
 index.html            Die gesamte Seite (10 Abschnitte)
 impressum.html        Platzhalter-Impressum
 datenschutz.html      Platzhalter-Datenschutz + Barrierefreiheitserklärung
+404.html              Fehlerseite im Seitendesign
+robots.txt            Indexierungssperre
 
 css/
   fonts.css           @font-face für die drei selbst gehosteten Schriften
@@ -167,8 +169,8 @@ die Seite ohne Cookie-Banner auskommt (siehe unten). Gesamtgewicht: ~3,0 MB,
 davon rund 2,7 MB Fotos.
 
 **Was abschaltbar ist, ist abgeschaltet:** Bei `prefers-reduced-motion: reduce`
-fallen sämtliche Animationen weg. Auf Touch-Geräten laufen Tilt,
-Magnet-Effekt und 3D-Tilt gar nicht erst an. Ohne JavaScript bleibt die
+fallen sämtliche Animationen weg. Auf Touch-Geräten laufen 3D-Tilt und
+Magnet-Effekt gar nicht erst an. Ohne JavaScript bleibt die
 Seite vollständig lesbar — die Klasse `no-js` auf `<html>` hält alle
 aufklappbaren Inhalte offen.
 
@@ -214,24 +216,38 @@ Für **diese Demo**:
 
 | Punkt | Status |
 |---|---|
-| Impressum | ⚠️ Gerüst mit markierten Platzhaltern — vor Livegang ausfüllen |
-| Datenschutzerklärung | ⚠️ Gerüst mit markierten Platzhaltern |
-| Cookie-/Consent-Banner | ➖ nicht nötig: keine Cookies, kein Tracking, keine Drittanbieter-Requests |
-| Barrierefreiheit (BFSG) | ➖ Kleinstunternehmer-Ausnahme greift bei den meisten Salons; Standards trotzdem eingehalten |
+| Impressum (fiktiver Salon) | ⚠️ Gerüst mit markierten Platzhaltern |
+| Impressum des **Betreibers** | ❌ fehlt — siehe unten |
+| Datenschutzerklärung | ⚠️ Gerüst; Hoster und Drittlandtransfer sind benannt, Details offen |
+| Cookie-/Consent-Banner | ➖ nicht nötig: keine Cookies, kein Tracking, keine Drittanbieter-Requests (geprüft) |
+| Barrierefreiheit (BFSG) | ➖ Informations-/Portfolioseite ohne echte Transaktion; WCAG 2.1 AA trotzdem eingehalten |
 | Urheberrecht Bilder | ✅ Unsplash-Lizenz; für echte Kund:innenfotos zusätzlich Einwilligung nötig |
-| Shop-Pflichten | ➖ nicht relevant, kein Verkauf |
+| Shop-Pflichten, Newsletter | ➖ nicht relevant, kein Verkauf, kein Versand |
 
-Drei Dinge, die beim Livegang für einen **echten** Salon dazukommen:
+### Was seit dem Livegang offen ist
 
-1. **Impressum und Datenschutz mit echten Daten füllen.** Ein fehlendes
-   Impressum ist einer der häufigsten Abmahngründe überhaupt (§ 5 DDG).
-2. **Sobald ein echtes Buchungssystem, eine Karte oder Analytics eingebaut
-   wird**, entsteht in aller Regel eine Einwilligungspflicht nach § 25 TDDDG —
-   dann braucht die Seite ein Consent-Banner, das *vor* dem Laden dieser
-   Dienste greift.
-3. **Gesundheitsdaten beachten.** Angaben zu Allergien, Unverträglichkeiten
-   oder Kopfhauterkrankungen fallen unter Art. 9 DSGVO und dürfen im Formular
-   nie Pflichtfeld sein.
+1. **Anbieterkennzeichnung des Betreibers.** Sobald die Demo Interessenten
+   gezeigt wird, ist sie ein geschäftsmäßiges Angebot — und braucht ein
+   Impressum **der Person, die sie betreibt**, nicht des erfundenen Salons.
+   Der Demo-Hinweis im Footer verhindert, dass jemand HAARSCHARF. für echt
+   hält; er ersetzt aber keine Anbieterkennzeichnung (§ 5 DDG).
+2. **Hosting in den USA.** Die Seite liegt auf GitHub Pages (GitHub, Inc.,
+   USA). Server-Logs mit IP-Adressen erreichen damit ein Drittland. In der
+   Datenschutzerklärung ist das benannt; Rechtsgrundlage der Übermittlung und
+   Auftragsverarbeitungsvertrag sind noch zu klären. Für einen echten Salon
+   ist ein EU-Hoster der einfachere Weg.
+
+### Was bei einem echten Salon zusätzlich dazukommt
+
+- **Impressum und Datenschutz mit echten Daten füllen.** Ein fehlendes
+  Impressum ist einer der häufigsten Abmahngründe überhaupt (§ 5 DDG).
+- **Sobald ein echtes Buchungssystem, eine Karte oder Analytics eingebaut
+  wird**, entsteht in aller Regel eine Einwilligungspflicht nach § 25 TDDDG —
+  dann braucht die Seite ein Consent-Banner, das *vor* dem Laden dieser
+  Dienste greift. Ab dann spricht auch einiges für eine BFSG-Pflicht.
+- **Gesundheitsdaten beachten.** Angaben zu Allergien, Unverträglichkeiten
+  oder Kopfhauterkrankungen fallen unter Art. 9 DSGVO und dürfen im Formular
+  nie Pflichtfeld sein.
 
 *Das ist eine strukturierte Einschätzung, keine Rechtsberatung. Für die
 rechtssichere Fassung gehört eine Anwältin oder ein Anwalt dazu.*

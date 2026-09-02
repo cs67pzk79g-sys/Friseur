@@ -54,7 +54,7 @@
   <ul>
     <li><strong>Keine Cookies.</strong> Die Seite setzt keine Cookies und schreibt nichts in den lokalen Speicher.</li>
     <li><strong>Kein Tracking, keine Analyse.</strong> Kein Google Analytics, kein Meta-Pixel, keine Heatmaps.</li>
-    <li><strong>Keine externen Ressourcen.</strong> Schriften, Bilder, Skripte und Stile liegen alle auf demselben Server. Es werden keine Besucher-IPs an Dritte übertragen — insbesondere werden Google Fonts <em>nicht</em> vom Google-CDN geladen (vgl. LG München I, Urteil vom 20.01.2022, Az. 3 O 17493/20).</li>
+    <li><strong>Keine externen Ressourcen.</strong> Schriften, Bilder, Skripte und Stile liegen alle auf demselben Server. Beim Seitenaufruf werden dadurch an <em>keinen eingebundenen Drittdienst</em> Daten übertragen — insbesondere werden Google Fonts <em>nicht</em> vom Google-CDN geladen (vgl. LG München I, Urteil vom 20.01.2022, Az. 3 O 17493/20). Das betrifft Inhalte <em>innerhalb</em> der Seite; der Server, der sie ausliefert, sieht die IP-Adresse naturgemäß trotzdem — siehe Abschnitt 3.</li>
     <li><strong>Keine Karte von Drittanbietern.</strong> Die Karte im Abschnitt „Hier sind wir“ ist eine selbst gezeichnete Grafik, kein Google-Maps-Embed.</li>
     <li><strong>Kein Datenversand.</strong> Buchungs&shy;strecke und Kontaktformular sind reine Oberflächen: Eingaben verlassen den Browser nicht und werden nirgends gespeichert.</li>
   </ul>
@@ -75,9 +75,28 @@
   <p>
     Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an
     einem sicheren, stabilen Betrieb). Speicherdauer:
-    <span class="ph">[Speicherdauer beim Hoster erfragen, üblich 7–30 Tage]</span>.
-    Hoster: <span class="ph">[Name und Sitz des Hosters]</span> —
-    mit diesem ist ein Auftrags&shy;verarbeitungs&shy;vertrag nach Art. 28 DSGVO zu schließen.
+    <span class="ph">[Speicherdauer beim Hoster erfragen]</span>.
+  </p>
+  <p>
+    <strong>Hoster dieser Demo:</strong> Die Seite wird über <em>GitHub Pages</em>
+    ausgeliefert, betrieben von GitHub,&nbsp;Inc. (Konzern Microsoft) mit Sitz in den
+    USA. Jeder Seitenaufruf erreicht damit einen Server dieses Anbieters, der dabei
+    die IP-Adresse der Besucherin oder des Besuchers verarbeitet.
+  </p>
+  <p>Daraus folgen zwei Punkte, die vor einem Echtbetrieb zu klären sind:</p>
+  <ul>
+    <li><strong>Drittlandübermittlung.</strong> Die USA sind ein Drittland im Sinne
+      der Art.&nbsp;44&nbsp;ff. DSGVO. Auf welcher Grundlage die Übermittlung erfolgt
+      (Angemessenheits&shy;beschluss EU-US Data Privacy Framework oder
+      Standard&shy;vertrags&shy;klauseln), ist
+      <span class="ph">[beim Anbieter zu prüfen und hier zu benennen]</span>.</li>
+    <li><strong>Auftragsverarbeitung.</strong> Ein Vertrag nach Art.&nbsp;28 DSGVO ist
+      erforderlich. Ob und in welcher Form der Anbieter ihn für das genutzte
+      Konto&shy;modell bereitstellt, ist <span class="ph">[zu prüfen]</span>.</li>
+  </ul>
+  <p>
+    Für einen echten Salon ist ein Hoster mit Serverstandort in der EU und einem
+    unterschriebenen Auftragsverarbeitungs&shy;vertrag in aller Regel der einfachere Weg.
   </p>
 
   <h2>4. Kontaktformular und Terminanfragen</h2>
