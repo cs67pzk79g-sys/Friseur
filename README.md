@@ -21,6 +21,54 @@ python3 -m http.server 8000
 
 ---
 
+## Veröffentlichen (GitHub Pages)
+
+Alles ist vorbereitet — **ein Schritt fehlt noch**, und der geht nur über die
+Repository-Einstellungen:
+
+> **Settings → Pages → Build and deployment → Source → „GitHub Actions“**
+
+Danach läuft der Workflow bei jedem Push automatisch, und die Seite steht unter
+`https://cs67pzk79g-sys.github.io/Friseur/`.
+
+Wer lieber ohne Actions arbeitet, wählt stattdessen unter *Source* den Eintrag
+„Deploy from a branch“, den Standard-Branch und den Ordner `/ (root)`. Dann ist
+`.github/workflows/pages.yml` überflüssig und kann gelöscht werden. **Nur eine
+der beiden Varianten aktivieren**, sonst schlägt der Workflow fehl.
+
+### Was dafür im Repo liegt
+
+| Datei | Wofür |
+|---|---|
+| `.github/workflows/pages.yml` | Kopiert die Seitendateien nach `site/` und veröffentlicht sie. `.claude/` und `.github/` bleiben außen vor. |
+| `.nojekyll` | Schaltet Jekyll ab. Ohne die Datei schickt Pages jeden Push durch Jekyll, das unter anderem Dateien mit führendem Unterstrich verschluckt. |
+| `404.html` | Fehlerseite im selben Design. Pages zieht sie automatisch. |
+| `robots.txt` | Sperrt die Indexierung (siehe unten). |
+
+### Suchmaschinen: bewusst gesperrt
+
+Die Seite ist per `robots.txt` **und** `<meta name="robots" content="noindex">`
+von der Indexierung ausgenommen. Der Grund ist nicht Bescheidenheit: Die Demo
+enthält einen erfundenen Salon samt Adresse, Telefonnummer, Öffnungszeiten und
+`HairSalon`-Structured-Data. Ohne die Sperre könnte Google diesen Fantasiebetrieb
+als echtes Unternehmen in den Index und ins Unternehmensprofil übernehmen.
+
+Soll die Seite als Portfolio-Referenz gefunden werden, sind zwei Handgriffe nötig:
+
+1. In `index.html` die Zeile `<meta name="robots" content="noindex, follow">` löschen
+2. In `robots.txt` die beiden `Disallow`-Zeilen entfernen
+
+Vorher aber die erfundenen Kontaktdaten im JSON-LD-Block durch echte ersetzen —
+oder den Block ganz entfernen.
+
+### Eigene Domain
+
+Bei eigener Domain an drei Stellen die Adresse austauschen: `og:url`, `og:image`
+und `canonical` in `index.html`. Dazu eine Datei `CNAME` mit der Domain im
+Wurzelverzeichnis anlegen und den DNS-Eintrag auf GitHub zeigen lassen.
+
+---
+
 ## Aufbau
 
 ```

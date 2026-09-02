@@ -18,11 +18,25 @@
 <meta property="og:site_name" content="HAARSCHARF.">
 <meta property="og:title" content="HAARSCHARF. — Salon für Präzisionsschnitt in Berlin Mitte">
 <meta property="og:description" content="Wir schneiden nicht nach Trend, sondern nach Kopf. Salon für Präzisionsschnitt, Farbe und Barbering.">
-<meta property="og:image" content="assets/img/hero.jpg">
+<!-- Open Graph verlangt ABSOLUTE URLs – ein relativer Pfad führt dazu,
+     dass beim Teilen in WhatsApp, Slack oder LinkedIn kein Vorschaubild
+     erscheint. Bei eigener Domain hier und beim canonical-Link unten
+     die Adresse austauschen. -->
+<meta property="og:url" content="https://cs67pzk79g-sys.github.io/Friseur/">
+<meta property="og:image" content="https://cs67pzk79g-sys.github.io/Friseur/assets/img/hero.jpg">
+<meta property="og:image:alt" content="Barbier schneidet mit der Schere einen Bart, dunkle Salonaufnahme">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="canonical" href="https://haarscharf.example/">
+<link rel="canonical" href="https://cs67pzk79g-sys.github.io/Friseur/">
+
+<!-- Diese Demo ist bewusst von der Suche ausgenommen: Die Seite enthält
+     einen erfundenen Salon samt Adresse und Öffnungszeiten. Ohne diese
+     Zeile könnte Google den Fantasiebetrieb als echtes Unternehmen
+     indexieren – samt strukturierter Daten weiter unten.
+     Soll die Seite gefunden werden (z. B. als Portfolio-Referenz),
+     einfach diese Zeile löschen und robots.txt anpassen. -->
+<meta name="robots" content="noindex, follow">
 
 <!-- Schriften und Stile werden lokal ausgeliefert – kein externer Request,
      also auch keine Übertragung von Besucher-IPs an Dritte. -->
