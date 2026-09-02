@@ -283,6 +283,11 @@
   transition: filter var(--t-slow) var(--ease), transform var(--t-slow) var(--ease);
 }
 .philo__fig:hover img { filter: grayscale(0) contrast(1.02) brightness(0.95); transform: scale(1.02); }
+/* Ohne Zeiger gibt es kein :hover. Dort setzt js/interactions.js beim
+   Scrollen .is-lit — nur die Farbe kommt zurück, nicht der Zoom: eine
+   Vergrößerung ohne Zeiger, von dem man wieder wegfahren könnte, wirkt
+   wie ein Fehler statt wie eine Reaktion. */
+.philo__fig.is-lit img { filter: grayscale(0) contrast(1.02) brightness(0.95); }
 .philo__fig figcaption { padding-top: 0.7rem; color: var(--bone-faint); }
 
 /* Drei Zahlen als Beleg statt Behauptung. */
@@ -464,6 +469,10 @@
   filter: grayscale(0) contrast(1.02) brightness(0.95);
   transform: scale(1.04);
 }
+/* Touch-Gegenstück, siehe Hinweis bei .philo__fig.is-lit */
+.team-card.is-lit .team-card__media img {
+  filter: grayscale(0) contrast(1.02) brightness(0.95);
+}
 
 /* Akzentrahmen, der beim Hover einfährt. */
 .team-card__media::after {
@@ -562,6 +571,10 @@
   filter: grayscale(0) contrast(1.02) brightness(0.98);
   transform: scale(1.05);
 }
+/* Touch-Gegenstück, siehe Hinweis bei .philo__fig.is-lit */
+.gal.is-lit .gal__btn img {
+  filter: grayscale(0) contrast(1.02) brightness(0.98);
+}
 
 .gal__cap {
   position: absolute;
@@ -576,6 +589,12 @@
 }
 .gal__btn:hover .gal__cap,
 .gal__btn:focus-visible .gal__cap { opacity: 1; transform: none; }
+
+/* Ohne Zeiger bleibt die Bildunterschrift dauerhaft stehen – sonst
+   wäre sie auf Tablets und Telefonen gar nicht erreichbar. */
+@media (hover: none) {
+  .gal__cap { opacity: 1; transform: none; }
+}
 
 @media (max-width: 61.9375rem) {
   .gallery__grid { grid-template-columns: repeat(2, 1fr); }
@@ -887,6 +906,8 @@
   transition: filter var(--t-base) var(--ease), transform var(--t-base) var(--ease);
 }
 .insta__tile:hover img { filter: none; transform: scale(1.06); }
+/* Touch-Gegenstück, siehe Hinweis bei .philo__fig.is-lit */
+.insta__tile.is-lit img { filter: none; }
 
 /* Overlay mit Likes/Kommentaren wie im echten Feed. */
 .insta__meta {

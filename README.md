@@ -172,6 +172,22 @@ Magnet-Effekt und Bildvorschau gar nicht erst an. Ohne JavaScript bleibt die
 Seite vollständig lesbar — die Klasse `no-js` auf `<html>` hält alle
 aufklappbaren Inhalte offen.
 
+**Was ohne Zeiger ersetzt wird, statt wegzufallen:** Die Fotos liegen
+entsättigt in der dunklen Bühne; ihre volle Farbe ist am Desktop die Belohnung
+fürs Überfahren. Auf einem Telefon gibt es kein Überfahren — dort übernimmt
+das Scrollen die Rolle: Sobald ein Bild ins Blickfeld kommt, kommt die Farbe
+(`.is-lit`, gesetzt in `initTouchReveal`). Dasselbe gilt für die
+Bildunterschriften in der Galerie, die unter `(hover: none)` dauerhaft stehen.
+
+Das ist bewusst eine Positionsprüfung beim Scrollen und **kein**
+`IntersectionObserver`: Der Observer meldet sich nur, wenn ein Element eine
+Schwelle *überquert*. Springt man per Menü-Link mitten in die Seite — und bei
+„Bewegung reduzieren“ springt der Browser hart statt zu gleiten —, überfliegen
+Bilder den Ausschnitt, ohne je darin gewesen zu sein: Der Observer schweigt,
+die Bilder blieben grau. Geprüft wurden gemütliches Durchscrollen, Sprung ans
+Seitenende, Menü-Sprung, jeweils mit und ohne reduzierte Bewegung, auf Telefon
+und Tablet.
+
 ---
 
 ## Barrierefreiheit
