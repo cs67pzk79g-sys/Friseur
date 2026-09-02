@@ -91,7 +91,7 @@
   margin-bottom: clamp(2rem, 4vw, 3rem);
   padding: 1.25rem 1.5rem;
   border: 1px solid var(--acid);
-  background: rgba(214, 242, 82, 0.06);
+  background: rgb(var(--acid-rgb) / 0.06);
 }
 .notice__title {
   font-size: var(--fs-mono);

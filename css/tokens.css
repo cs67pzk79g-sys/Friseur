@@ -23,13 +23,20 @@
   --bone-mute:      #a5a199;   /* Sekundärtext            – 8.0:1      */
   --bone-faint:     #7d7a73;   /* Labels, Metadaten       – 4.8:1      */
 
-  /* Der Akzent: ein kaltes, säuriges Chartreuse. Gewählt, weil es
-     "Klinge/Präzision" transportiert statt des üblichen Salon-Golds –
-     und weil es auf Fast-Schwarz ein Kontrastverhältnis von ~15:1
-     liefert, also auch für kleinen Text WCAG-AAA-tauglich ist.        */
-  --acid:           #d6f252;
-  --acid-dim:       #aac33f;
-  --acid-glow:      rgba(214, 242, 82, 0.14);
+  /* Der Akzent: ein warmes Messing. Gewählt, weil es das Metall der
+     Schere aufgreift und mit dem warmen Off-White dieselbe Temperatur
+     teilt – ohne ins billige Gold zu kippen. Kontrast auf Fast-Schwarz:
+     8.75:1, also auch für kleinen Text WCAG-AA-sicher.
+
+     WICHTIG: --acid-rgb ist die einzige Stelle, an der der Farbwert
+     wirklich steht. Alle durchscheinenden Varianten leiten sich davon
+     ab (rgb(var(--acid-rgb) / 0.06)), damit ein Farbwechsel tatsächlich
+     nur eine Zeile kostet und nirgends ein Rest der alten Farbe
+     stehen bleibt.                                                     */
+  --acid-rgb:       217 164 65;
+  --acid:           rgb(var(--acid-rgb));
+  --acid-dim:       #a87f2f;
+  --acid-glow:      rgb(var(--acid-rgb) / 0.14);
   --on-acid:        #0b0b0c;   /* Text AUF der Akzentfläche            */
 
   /* --- Typografie --------------------------------------------------

@@ -56,10 +56,32 @@ würden dabei an der CORS-Prüfung scheitern.
 ## Gestaltungsentscheidungen
 
 **Farbe.** Fast-Schwarz `#0b0b0c` statt reinem Schwarz (auf OLED reißen Bilder
-sonst ab), warmes Off-White `#f4f1e9`, und genau **ein** Akzent: ein kaltes
-Chartreuse `#d6f252`. Gewählt gegen das übliche Salon-Gold, weil es
-„Klinge / Präzision“ transportiert — und weil es auf dem Grundton ~15:1
-Kontrast liefert, also auch in kleinen Größen unbedenklich ist.
+sonst ab), warmes Off-White `#f4f1e9`, und genau **ein** Akzent: ein warmes
+Messing `#d9a441`. Es greift das Metall der Schere auf und teilt mit dem
+Off-White dieselbe Temperatur — dadurch wirkt die Seite geschlossen statt
+kontrastgeladen. Kontrast auf dem Grundton: 8,75:1, also auch in kleinen
+Größen unbedenklich.
+
+**Farbe wechseln.** Der Akzent hängt an *einer* Zeile in `css/tokens.css`:
+
+```css
+--acid-rgb: 217 164 65;   /* Messing */
+```
+
+Alles andere — Volltonflächen, Hover-Zustände, die Haarlinie im Hero, der Pin
+in der SVG-Karte und sämtliche durchscheinenden Auswahlflächen — leitet sich
+über `rgb(var(--acid-rgb) / …)` daraus ab. Erprobte Alternativen, alle
+WCAG-AA-fest auf dem Grundton:
+
+| | Hex | `--acid-rgb` | Kontrast | Charakter |
+|---|---|---|---|---|
+| Messing *(gesetzt)* | `#d9a441` | `217 164 65` | 8,75:1 | warm, metallisch, premium |
+| Kupfer | `#f0592b` | `240 89 43` | 5,78:1 | laut, editorial |
+| Stahlblau | `#9dc9e0` | `157 201 224` | 11,12:1 | kalt, chirurgisch |
+| Koralle | `#f2626f` | `242 98 111` | 6,33:1 | warm, weich |
+
+Einzige Stelle außerhalb: `assets/favicon.svg` (dort steht der Hex-Wert
+direkt, weil eine Icon-Datei keine CSS-Variablen kennt).
 
 **Typografie.** Drei Rollen, drei Schriften:
 Big Shoulders Display (schmale Plakatgrotesk, Wortmarke und Überschriften),
