@@ -36,6 +36,10 @@ Wer lieber ohne Actions arbeitet, wählt stattdessen unter *Source* den Eintrag
 `.github/workflows/pages.yml` überflüssig und kann gelöscht werden. **Nur eine
 der beiden Varianten aktivieren**, sonst schlägt der Workflow fehl.
 
+**Beim Umbenennen des Standard-Branches** den Namen in `pages.yml` unter
+`on.push.branches` mit anpassen. Steht dort ein Branch, den es nicht mehr gibt,
+läuft der Workflow einfach nicht mehr an — ohne Fehlermeldung.
+
 ### Was dafür im Repo liegt
 
 | Datei | Wofür |
