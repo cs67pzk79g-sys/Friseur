@@ -303,11 +303,61 @@
 
 
   /* ---------------------------------------------------------------
+     Bilder aufhellen auf Geräten ohne Zeiger
+
+     Die Fotos liegen entsättigt und abgedunkelt in der dunklen Bühne;
+     ihre volle Farbe ist am Desktop die Belohnung fürs Überfahren. Auf
+     einem Telefon gibt es kein Überfahren — dort müsste man jedes Bild
+     antippen, was praktisch niemand tut. Also übernimmt das Scrollen
+     die Rolle: sobald ein Bild im Blickfeld ist, kommt die Farbe.
+
+     Einmal aufgehellt bleibt aufgehellt. Wieder abzudunkeln, sobald
+     das Bild den Rand berührt, würde beim Zurückscrollen flackern.
+     --------------------------------------------------------------- */
+  function initTouchReveal() {
+    // Bewusst (hover: none) statt der Zeiger-Prüfung oben: exakt
+    // dieselbe Bedingung, unter der die :hover-Regeln im CSS tot sind.
+    if (!window.matchMedia('(hover: none)').matches) return;
+
+    // Noch nicht aufgehellte Bilder. Die Menge leert sich im Lauf des
+    // Scrollens; ist sie leer, kostet jeder weitere Aufruf nichts.
+    const pending = new Set($$('.gal, .insta__tile, .team-card, .philo__fig'));
+    if (!pending.size) return;
+
+    /* Bewusst eine Positionsprüfung beim Scrollen statt eines
+       IntersectionObservers: Der Observer meldet sich nur, wenn ein
+       Element eine Schwelle *überquert*. Springt man per Menü-Link
+       mitten in die Seite — und bei "Bewegung reduzieren" springt der
+       Browser hart statt zu gleiten —, überfliegen Bilder den
+       Ausschnitt, ohne je darin gewesen zu sein: der Observer schweigt,
+       die Bilder blieben grau. Die Abfrage hier kennt diesen Fall
+       nicht, sie sieht nur, wo ein Element gerade steht. */
+    function sweep() {
+      if (!pending.size) return;
+      const trigger = window.innerHeight * 0.82;
+      pending.forEach(function (el) {
+        // top < trigger deckt beides ab: gerade hereingescrollt und
+        // längst nach oben hinausgeschoben (dann ist top negativ).
+        if (el.getBoundingClientRect().top < trigger) {
+          el.classList.add('is-lit');
+          pending.delete(el);
+        }
+      });
+    }
+
+    HS.onScroll(sweep);                       // bereits an den Bildtakt gekoppelt
+    window.addEventListener('resize', sweep, { passive: true });
+    sweep();                                  // was beim Laden schon zu sehen ist
+  }
+
+
+  /* ---------------------------------------------------------------
      Start
      --------------------------------------------------------------- */
   function boot() {
-    initTabs();       // immer – reine Bedienung, kein Effekt
-    initLightbox();   // immer
+    initTabs();         // immer – reine Bedienung, kein Effekt
+    initLightbox();     // immer
+    initTouchReveal();  // nur ohne Zeiger
     initMagnetic();
     initTilt();
     initHeroCut();
