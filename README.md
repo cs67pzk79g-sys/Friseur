@@ -91,7 +91,7 @@ js/
 
 assets/
   fonts/              14 woff2-Dateien (latin + latin-ext)
-  img/                27 Fotos, lokal
+  img/                23 Fotos, lokal
   favicon.svg
 ```
 
@@ -163,12 +163,12 @@ als echtes Masonry über Zeilen-Spans. Negative Flächen sind gesetzt, nicht
 
 **Keine externen Abhängigkeiten.** Kein GSAP, kein jQuery, kein Framework, keine
 Google-Fonts-CDN. Das ist nicht Sparsamkeit, sondern Voraussetzung dafür, dass
-die Seite ohne Cookie-Banner auskommt (siehe unten). Gesamtgewicht: ~3,2 MB,
-davon rund 2,9 MB Fotos.
+die Seite ohne Cookie-Banner auskommt (siehe unten). Gesamtgewicht: ~3,0 MB,
+davon rund 2,7 MB Fotos.
 
 **Was abschaltbar ist, ist abgeschaltet:** Bei `prefers-reduced-motion: reduce`
 fallen sämtliche Animationen weg. Auf Touch-Geräten laufen Tilt,
-Magnet-Effekt und Bildvorschau gar nicht erst an. Ohne JavaScript bleibt die
+Magnet-Effekt und 3D-Tilt gar nicht erst an. Ohne JavaScript bleibt die
 Seite vollständig lesbar — die Klasse `no-js` auf `<html>` hält alle
 aufklappbaren Inhalte offen.
 
