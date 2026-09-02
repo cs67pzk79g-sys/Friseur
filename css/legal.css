@@ -7,6 +7,16 @@
   max-width: 46rem;
   margin-inline: auto;
   padding: clamp(7rem, 14vh, 10rem) var(--gutter) clamp(4rem, 8vw, 7rem);
+
+  /* Grundfarbe des Fließtexts steht bewusst HIER und nicht auf
+     ".legal p, .legal li". Ein Selektor aus Klasse + Element hat eine
+     höhere Spezifität als eine einzelne Klasse und hätte damit jede
+     Hilfsklasse auf einem Absatz überstimmt — genau das ist passiert:
+     Die Warnzeile ".notice__title" und das Akzent-Label wurden grau
+     statt messingfarben dargestellt, ohne dass eine Regel sichtbar
+     falsch war. Über den Container vererbt sich die Farbe stattdessen
+     und lässt sich von jeder Klasse am Element normal überschreiben. */
+  color: var(--bone-mute);
 }
 
 .legal__back {
@@ -20,9 +30,16 @@
 }
 .legal__back:hover { color: var(--acid); }
 
+/* Akzent-Label über der Seitenüberschrift. Die Klassen .label und
+   .label--acid kommen aus base.css, hier steht nur der Abstand. */
+.legal__eyebrow {
+  margin-bottom: 0.85rem;
+}
+
 .legal h1 {
   font-family: var(--font-display);
   font-weight: 800;
+  color: var(--bone);
   font-size: clamp(2.5rem, 8vw, 4.5rem);
   line-height: 0.9;
   letter-spacing: var(--tracking-display);
@@ -33,6 +50,7 @@
 .legal h2 {
   font-family: var(--font-display);
   font-weight: 700;
+  color: var(--bone);
   font-size: clamp(1.35rem, 3vw, 1.85rem);
   line-height: 1.1;
   letter-spacing: -0.02em;
@@ -45,10 +63,10 @@
 .legal h3 {
   font-size: var(--fs-body);
   font-weight: 600;
+  color: var(--bone);
   margin-block: 1.75rem 0.5rem;
 }
 
-.legal p, .legal li { color: var(--bone-mute); }
 .legal p + p { margin-top: 0.9rem; }
 
 .legal ul {
@@ -92,6 +110,9 @@
   padding: 1.25rem 1.5rem;
   border: 1px solid var(--acid);
   background: rgb(var(--acid-rgb) / 0.06);
+  /* Aus demselben Grund wie bei .legal: die Grundfarbe steht am
+     Container, nicht auf ".notice p". Sonst überstimmt sie den Titel. */
+  color: var(--bone-mute);
 }
 .notice__title {
   font-size: var(--fs-mono);
@@ -100,7 +121,7 @@
   text-transform: uppercase;
   color: var(--acid);
 }
-.notice p { font-size: var(--fs-sm); color: var(--bone-mute); }
+.notice p { font-size: var(--fs-sm); }
 .notice strong { color: var(--bone); }
 
 .legal__meta {
