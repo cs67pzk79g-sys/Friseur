@@ -81,8 +81,8 @@
   --t-slow:  900ms;
 
   --radius:  2px;                /* fast eckig – "haarscharf", nicht soft */
-  --z-nav:   100;
-  --z-cursor: 9999;
+  --z-nav:     100;
+  --z-overlay: 9999;
 }
 
 /* Wer Bewegung reduziert haben will, bekommt sie reduziert – nicht

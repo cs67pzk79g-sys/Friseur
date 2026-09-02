@@ -57,7 +57,8 @@
   --btn-fg: var(--on-acid);
   --btn-bd: var(--acid);
 }
-/* Ein bereits grüner Button füllt sich mit Off-White. */
+/* Ein Button, der bereits die Akzentfarbe trägt, füllt sich mit
+   Off-White – sonst wäre beim Hover kein Unterschied zu sehen. */
 .btn--acid::after { background: var(--bone); }
 .btn--acid:hover, .btn--acid:focus-visible { color: var(--on-acid); border-color: var(--bone); }
 
@@ -73,66 +74,6 @@
   transform: none;
 }
 .btn:disabled::after { transform: scaleY(0); }
-
-
-/* ══════════════════════════════════════════════════════════ CURSOR */
-
-/* Der eigene Zeiger ist ein Strich, keine Kugel: eine Klinge.
-   Er wird per JS nur eingeschaltet, wenn ein feiner Zeiger existiert. */
-.cursor {
-  position: fixed;
-  top: 0; left: 0;
-  z-index: var(--z-cursor);
-  pointer-events: none;
-  opacity: 0;
-  will-change: transform;
-  transition: opacity var(--t-base) var(--ease);
-}
-
-body.has-cursor .cursor { opacity: 1; }
-body.has-cursor,
-body.has-cursor a,
-body.has-cursor button { cursor: none; }
-
-.cursor__blade {
-  display: block;
-  width: 46px;
-  height: 1px;
-  background: var(--acid);
-  transform: translate(-50%, -50%) rotate(-38deg);
-  transform-origin: center;
-  transition: width var(--t-base) var(--spring),
-              height var(--t-base) var(--spring),
-              background-color var(--t-fast) var(--ease),
-              transform var(--t-base) var(--spring);
-}
-
-/* Über interaktiven Elementen wird aus dem Strich ein offener Ring. */
-.cursor.is-hot .cursor__blade {
-  width: 46px;
-  height: 46px;
-  border: 1px solid var(--acid);
-  border-radius: 50%;
-  background: var(--acid-glow);
-  transform: translate(-50%, -50%) rotate(0deg);
-}
-
-/* Über Bildern zusätzlich ein Wort im Ring ("Ansehen"). */
-.cursor__label {
-  position: absolute;
-  top: 0; left: 0;
-  transform: translate(-50%, -50%) scale(0.6);
-  font-size: 0.5625rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--acid);
-  opacity: 0;
-  white-space: nowrap;
-  transition: opacity var(--t-fast) var(--ease),
-              transform var(--t-base) var(--spring);
-}
-.cursor.has-label .cursor__label { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
 
 /* ══════════════════════════════════════════════════════ NAVIGATION */
@@ -472,7 +413,7 @@ body.has-cursor button { cursor: none; }
 .lightbox {
   position: fixed;
   inset: 0;
-  z-index: calc(var(--z-cursor) - 1);
+  z-index: calc(var(--z-overlay) - 1);
   display: flex;
   align-items: center;
   justify-content: center;
