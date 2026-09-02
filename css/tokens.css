@@ -67,7 +67,14 @@
   /* --- Raster & Raum ----------------------------------------------- */
   --page-max:      88rem;        /* 1408px – bewusst breit, editorial   */
   --gutter:        clamp(1.25rem, 0.7rem + 2.6vw, 4.5rem);
-  --section-y:     clamp(5rem, 3rem + 9vw, 12rem);
+
+  /* Abstand ober- und unterhalb jeder Sektion. Achtung beim Ändern:
+     zwischen zwei Sektionen wirkt der Wert DOPPELT, weil sich unteres
+     und oberes Polster addieren. Als Faustregel sollte die Lücke rund
+     ein Viertel Bildschirmhöhe betragen – sie soll als Pause gelesen
+     werden, nicht als Seitenende. Bei 1512x950 ergibt das hier 126 px
+     je Seite, also 252 px Lücke (~26 % der Fensterhöhe).             */
+  --section-y:     clamp(4.5rem, 2rem + 6.2vw, 8.5rem);
   --stack:         clamp(1rem, 0.8rem + 0.8vw, 1.75rem);
 
   /* --- Bewegung -----------------------------------------------------
