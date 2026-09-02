@@ -13,13 +13,22 @@
 
 name: Deploy to GitHub Pages
 
+# Der Workflow läuft NUR NOCH AUF KNOPFDRUCK. Der automatische Auslöser bei
+# jedem Push ist bewusst deaktiviert: Die Seite wird nicht mehr öffentlich
+# veröffentlicht, sondern lokal vom Rechner aus vorgeführt (index.html
+# doppelklicken – sie läuft ohne Server und ohne Internet).
+#
+# Zwei Gründe für "auskommentiert" statt "gelöscht":
+#   1. Ist GitHub Pages abgeschaltet, würde ein automatischer Lauf bei jedem
+#      Push fehlschlagen – rote Kreuze an jedem Commit, ohne dass etwas
+#      kaputt wäre.
+#   2. So bleibt dokumentiert, wie das Veröffentlichen ging. Zum Reaktivieren
+#      die drei Zeilen unter "push:" wieder einkommentieren und in den
+#      Repository-Einstellungen Pages erneut auf "GitHub Actions" stellen.
 on:
-  push:
-    # Wird der Standard-Branch je umbenannt, muss dieser Name mit. Sonst
-    # setzt der Deploy stillschweigend aus: Der Workflow springt gar nicht
-    # erst an, und GitHub meldet das nirgends als Fehler.
-    branches: [main]
-  workflow_dispatch:   # erlaubt manuelles Auslösen über die Actions-Oberfläche
+  # push:
+  #   branches: [main]
+  workflow_dispatch:   # manuell über Actions → Run workflow
 
 permissions:
   contents: read
