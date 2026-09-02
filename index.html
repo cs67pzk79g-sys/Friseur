@@ -39,9 +39,16 @@
 <meta name="robots" content="noindex, follow">
 
 <!-- Schriften und Stile werden lokal ausgeliefert – kein externer Request,
-     also auch keine Übertragung von Besucher-IPs an Dritte. -->
-<link rel="preload" href="assets/fonts/big-shoulders-display-800-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/instrument-sans-400-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+     also auch keine Übertragung von Besucher-IPs an Dritte.
+
+     BEWUSST OHNE <link rel="preload"> für die Schriften: Ein Font-Preload
+     verlangt zwingend das Attribut crossorigin, und das lässt Browser eine
+     CORS-Prüfung machen. Öffnet man die Datei direkt per Doppelklick
+     (file://), hat das Dokument die Herkunft "null" – die Prüfung schlägt
+     fehl und es landen rote Fehler in der Konsole. Die Schriften selbst
+     lädt das CSS ohnehin zuverlässig; der Preload hätte nur ein paar
+     Millisekunden gebracht. Für eine Seite, die auch offline vom Laptop
+     aus vorgeführt wird, ist die saubere Konsole mehr wert. -->
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/base.css">
