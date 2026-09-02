@@ -15,8 +15,13 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    # Beim Umbenennen des Standard-Branches hier mit anpassen.
-    branches: [claude/create-repo-folder-1rn5c0]
+    # Beide Namen absichtlich gelistet: Der Standard-Branch wird gerade von
+    # "claude/create-repo-folder-1rn5c0" auf "main" umbenannt. Stünde hier
+    # nur einer, würde der Deploy je nach Zeitpunkt stillschweigend
+    # aussetzen – der Workflow liefe gar nicht erst an, und niemand bekäme
+    # eine Fehlermeldung. Sobald die Umbenennung durch ist, kann der alte
+    # Name raus.
+    branches: [main, claude/create-repo-folder-1rn5c0]
   workflow_dispatch:   # erlaubt manuelles Auslösen über die Actions-Oberfläche
 
 permissions:
