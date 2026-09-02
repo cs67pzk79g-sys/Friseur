@@ -188,44 +188,6 @@
 
 
   /* ---------------------------------------------------------------
-     Preisliste: Bildvorschau am Zeiger
-     --------------------------------------------------------------- */
-  function initPricePeek() {
-    const peek = $('#svcPeek');
-    if (!peek || !canMove) return;
-
-    const img = $('img', peek);
-    const rows = $$('.price-row[data-peek]');
-    if (!rows.length) return;
-
-    let raf = null, tx = 0, ty = 0;
-
-    function move(e) {
-      tx = e.clientX; ty = e.clientY;
-      if (raf) return;
-      raf = requestAnimationFrame(function () {
-        raf = null;
-        // Die Vorschau sitzt rechts neben dem Zeiger, außer es wird zu
-        // eng am rechten Rand — dann klappt sie nach links.
-        const offset = tx > window.innerWidth - 300 ? -160 : 160;
-        peek.style.top  = ty + 'px';
-        peek.style.left = (tx + offset) + 'px';
-      });
-    }
-
-    rows.forEach(function (row) {
-      row.addEventListener('mouseenter', function () {
-        const src = row.dataset.peek;
-        if (img.getAttribute('src') !== src) img.src = src;
-        peek.classList.add('is-on');
-      });
-      row.addEventListener('mousemove', move);
-      row.addEventListener('mouseleave', function () { peek.classList.remove('is-on'); });
-    });
-  }
-
-
-  /* ---------------------------------------------------------------
      Galerie-Lightbox
 
      Mit Tastaturbedienung (Pfeile, Esc), Fokus-Rückgabe und einer
@@ -361,7 +323,6 @@
     initMagnetic();
     initTilt();
     initHeroCut();
-    initPricePeek();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
