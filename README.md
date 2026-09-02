@@ -9,61 +9,62 @@ was individuell gebaute Websites gegenüber Baukastensystemen leisten.
 
 ---
 
-## Starten
+## Vorführen (lokal, ohne Server)
 
-Kein Build-Prozess, keine Abhängigkeiten, kein `npm install`.
+`index.html` doppelklicken. Fertig.
+
+Die Seite hat **null externe Abhängigkeiten** — Schriften, Bilder, Skripte und
+Stile liegen alle im Ordner. Sie läuft deshalb vollständig **ohne Internet**:
+Buchungsstrecke, Galerie, Animationen, Rechtsseiten. Genau dafür ist sie so
+gebaut; ein Kundentermin in einem Salon mit schlechtem WLAN ist kein Problem.
+
+Wer lieber einen lokalen Server will (sauberere MIME-Typen, aber nicht nötig):
 
 ```bash
-# Reicht meistens: index.html im Browser öffnen.
-# Sauberer (relative Pfade, korrekte MIME-Typen):
 python3 -m http.server 8000
 ```
 
 ---
 
-## Veröffentlichen (GitHub Pages)
+## Veröffentlichen — derzeit abgeschaltet
 
-Die Seite ist veröffentlicht und erreichbar unter
-**https://cs67pzk79g-sys.github.io/Friseur/** — der Workflow läuft bei jedem Push
-auf den Standard-Branch.
+Die Seite ist **nicht öffentlich erreichbar**. Sie wird lokal vorgeführt, nicht
+im Netz gehostet. Das hat einen konkreten Vorteil über die Technik hinaus: Ein
+nur lokal gezeigtes Projekt ist kein geschäftsmäßig angebotenes Telemedium und
+löst damit keine Impressumspflicht nach § 5 DDG aus (siehe *Rechtliche
+Checkliste*).
 
-Für ein neues Repository ist einmalig nötig:
+`.github/workflows/pages.yml` liegt weiterhin im Repository, läuft aber **nur
+noch auf Knopfdruck** (*Actions → Deploy to GitHub Pages → Run workflow*). Der
+automatische Auslöser bei jedem Push ist auskommentiert.
 
-> **Settings → Pages → Build and deployment → Source → „GitHub Actions“**
+### Wieder veröffentlichen
 
-Wer lieber ohne Actions arbeitet, wählt stattdessen unter *Source* den Eintrag
-„Deploy from a branch“, den Standard-Branch und den Ordner `/ (root)`. Dann ist
-`.github/workflows/pages.yml` überflüssig und kann gelöscht werden. **Nur eine
-der beiden Varianten aktivieren**, sonst schlägt der Workflow fehl.
+Drei Schritte, alle rückgängig zu machen:
 
-**Beim Umbenennen des Standard-Branches** den Namen in `pages.yml` unter
-`on.push.branches` mit anpassen. Steht dort ein Branch, den es nicht mehr gibt,
-läuft der Workflow einfach nicht mehr an — ohne Fehlermeldung.
+1. In `pages.yml` die drei Zeilen unter `on:` wieder einkommentieren:
+   ```yaml
+   push:
+     branches: [main]
+   ```
+2. *Settings → Pages → Build and deployment → Source* auf **„GitHub Actions"**
+3. *Settings → Environments → `github-pages` → Deployment branches* muss `main`
+   erlauben. **Diese Stelle wird gern übersehen:** Sie zieht bei einer
+   Branch-Umbenennung nicht automatisch mit, und der Deploy scheitert dann
+   ohne verwertbare Fehlermeldung — der Job bricht nach zwei Sekunden ab, ohne
+   dass je ein Runner zugewiesen wurde.
 
-### Was dafür im Repo liegt
+Vor einem erneuten Livegang die Punkte aus der *Rechtlichen Checkliste* prüfen,
+insbesondere die Anbieterkennzeichnung des Betreibers.
+
+### Was sonst noch für das Veröffentlichen im Repo liegt
 
 | Datei | Wofür |
 |---|---|
 | `.github/workflows/pages.yml` | Kopiert die Seitendateien nach `site/` und veröffentlicht sie. `.claude/` und `.github/` bleiben außen vor. |
 | `.nojekyll` | Schaltet Jekyll ab. Ohne die Datei schickt Pages jeden Push durch Jekyll, das unter anderem Dateien mit führendem Unterstrich verschluckt. |
 | `404.html` | Fehlerseite im selben Design. Pages zieht sie automatisch. |
-| `robots.txt` | Sperrt die Indexierung (siehe unten). |
-
-### Suchmaschinen: bewusst gesperrt
-
-Die Seite ist per `robots.txt` **und** `<meta name="robots" content="noindex">`
-von der Indexierung ausgenommen. Der Grund ist nicht Bescheidenheit: Die Demo
-enthält einen erfundenen Salon samt Adresse, Telefonnummer, Öffnungszeiten und
-`HairSalon`-Structured-Data. Ohne die Sperre könnte Google diesen Fantasiebetrieb
-als echtes Unternehmen in den Index und ins Unternehmensprofil übernehmen.
-
-Soll die Seite als Portfolio-Referenz gefunden werden, sind zwei Handgriffe nötig:
-
-1. In `index.html` die Zeile `<meta name="robots" content="noindex, follow">` löschen
-2. In `robots.txt` die beiden `Disallow`-Zeilen entfernen
-
-Vorher aber die erfundenen Kontaktdaten im JSON-LD-Block durch echte ersetzen —
-oder den Block ganz entfernen.
+| `robots.txt` | Sperrt die Indexierung. |
 
 ### Eigene Domain
 
@@ -216,30 +217,37 @@ Geprüft und eingehalten:
 
 ## Rechtliche Checkliste (Deutschland/EU)
 
-Für **diese Demo**:
+Die Seite wird **nur lokal vorgeführt**, nicht im Netz veröffentlicht. Das ist
+die rechtlich entscheidende Tatsache: Was ausschließlich auf dem eigenen Rechner
+gezeigt wird, ist kein geschäftsmäßig angebotenes Telemedium — wie eine
+ausgedruckte Mappe.
 
 | Punkt | Status |
 |---|---|
-| Impressum (fiktiver Salon) | ⚠️ Gerüst mit markierten Platzhaltern |
-| Impressum des **Betreibers** | ❌ fehlt — siehe unten |
-| Datenschutzerklärung | ⚠️ Gerüst; Hoster und Drittlandtransfer sind benannt, Details offen |
+| Impressum des Betreibers | ➖ nicht erforderlich, solange nur lokal gezeigt wird |
+| Impressum (fiktiver Salon) | ⚠️ Gerüst mit markierten Platzhaltern, bewusst so |
+| Datenschutzerklärung | ⚠️ Gerüst; für den lokalen Betrieb gegenstandslos |
 | Cookie-/Consent-Banner | ➖ nicht nötig: keine Cookies, kein Tracking, keine Drittanbieter-Requests (geprüft) |
-| Barrierefreiheit (BFSG) | ➖ Informations-/Portfolioseite ohne echte Transaktion; WCAG 2.1 AA trotzdem eingehalten |
+| Barrierefreiheit (BFSG) | ➖ keine Pflicht; WCAG 2.1 AA trotzdem eingehalten |
 | Urheberrecht Bilder | ✅ Unsplash-Lizenz; für echte Kund:innenfotos zusätzlich Einwilligung nötig |
 | Shop-Pflichten, Newsletter | ➖ nicht relevant, kein Verkauf, kein Versand |
+| Hosting-Drittlandtransfer | ➖ entfällt, solange nichts gehostet wird |
 
-### Was seit dem Livegang offen ist
+### Der Punkt, an dem es kippt
 
-1. **Anbieterkennzeichnung des Betreibers.** Sobald die Demo Interessenten
-   gezeigt wird, ist sie ein geschäftsmäßiges Angebot — und braucht ein
-   Impressum **der Person, die sie betreibt**, nicht des erfundenen Salons.
-   Der Demo-Hinweis im Footer verhindert, dass jemand HAARSCHARF. für echt
-   hält; er ersetzt aber keine Anbieterkennzeichnung (§ 5 DDG).
-2. **Hosting in den USA.** Die Seite liegt auf GitHub Pages (GitHub, Inc.,
-   USA). Server-Logs mit IP-Adressen erreichen damit ein Drittland. In der
-   Datenschutzerklärung ist das benannt; Rechtsgrundlage der Übermittlung und
-   Auftragsverarbeitungsvertrag sind noch zu klären. Für einen echten Salon
-   ist ein EU-Hoster der einfachere Weg.
+Sobald die Seite **wieder öffentlich erreichbar** ist — auch als Link, den man
+nach einem Termin verschickt, und auch ohne Auffindbarkeit über Suchmaschinen —
+ist sie ein geschäftsmäßiges Angebot. Dann gilt:
+
+1. **Anbieterkennzeichnung des Betreibers** wird Pflicht (§ 5 DDG): Name,
+   ladungsfähige Anschrift, E-Mail. Nicht die des erfundenen Salons, sondern
+   der Person, die die Seite betreibt. Der Demo-Hinweis im Footer verhindert,
+   dass jemand HAARSCHARF. für echt hält — er ersetzt aber keine
+   Anbieterkennzeichnung.
+2. **Hosting-Angaben** in der Datenschutzerklärung müssen zum tatsächlichen
+   Hoster passen. Bei GitHub Pages (GitHub, Inc., USA) kommen
+   Drittlandübermittlung nach Art. 44 ff. DSGVO und ein
+   Auftragsverarbeitungsvertrag nach Art. 28 DSGVO dazu.
 
 ### Was bei einem echten Salon zusätzlich dazukommt
 
