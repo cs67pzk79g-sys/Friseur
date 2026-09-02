@@ -80,13 +80,13 @@ css/
   fonts.css           @font-face für die drei selbst gehosteten Schriften
   tokens.css          Farbe, Typo, Raster, Timing — die einzige Stellschraube
   base.css            Reset, Grundtypografie, Barrierefreiheits-Hilfsklassen
-  components.css      Buttons, Navigation, Cursor, Formular, Lightbox, Tabs
+  components.css      Buttons, Navigation, Formular, Lightbox, Tabs
   sections.css        Layout je Abschnitt, von oben nach unten
   legal.css           Rechtsseiten
 
 js/
   core.js             Hilfsfunktionen, Navigation, Scroll-Reveals, Parallax
-  interactions.js     Cursor, magnetische Buttons, 3D-Tilt, Lightbox, Tabs
+  interactions.js     Magnetische Buttons, 3D-Tilt, Lightbox, Tabs
   booking.js          Buchungs-Flow (State Machine) + Formularvalidierung
 
 assets/
@@ -156,7 +156,7 @@ als echtes Masonry über Zeilen-Spans. Negative Flächen sind gesetzt, nicht
 |---|---|
 | Scroll-Reveals | `IntersectionObserver`, gestaffelt nach Position |
 | Parallax | ein einziger gedrosselter Scroll-Listener, nur für sichtbare Elemente |
-| Eigener Cursor | eine `requestAnimationFrame`-Schleife für Zeiger *und* magnetische Buttons |
+| Magnetische Buttons | eine `requestAnimationFrame`-Schleife für alle Elemente statt einer je Button |
 | 3D-Tilt | `perspective()` in der Transform, max. 6° Ausschlag |
 | Buchungs-Flow | kleine State Machine: ein Zustandsobjekt, eine `render()`-Funktion |
 | Karte | handgezeichnetes Inline-SVG statt Google-Maps-Embed |
@@ -167,7 +167,7 @@ die Seite ohne Cookie-Banner auskommt (siehe unten). Gesamtgewicht: ~3,2 MB,
 davon rund 2,9 MB Fotos.
 
 **Was abschaltbar ist, ist abgeschaltet:** Bei `prefers-reduced-motion: reduce`
-fallen sämtliche Animationen weg. Auf Touch-Geräten laufen Cursor, Tilt,
+fallen sämtliche Animationen weg. Auf Touch-Geräten laufen Tilt,
 Magnet-Effekt und Bildvorschau gar nicht erst an. Ohne JavaScript bleibt die
 Seite vollständig lesbar — die Klasse `no-js` auf `<html>` hält alle
 aufklappbaren Inhalte offen.

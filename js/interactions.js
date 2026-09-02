@@ -18,45 +18,31 @@
 
 
   /* ---------------------------------------------------------------
-     Eigener Mauszeiger + magnetische Elemente
+     Magnetische Elemente
 
-     Beides hängt an derselben Mausposition, deshalb teilen sie sich
-     eine einzige requestAnimationFrame-Schleife. Zwei getrennte
-     Schleifen wären doppelte Arbeit pro Bild.
+     Buttons mit [data-magnetic] ziehen sich leicht zum Zeiger, solange
+     er in Reichweite ist. Läuft in einer einzigen
+     requestAnimationFrame-Schleife für alle Elemente — pro Bild eine
+     Schleife statt einer je Button.
      --------------------------------------------------------------- */
-  function initCursor() {
-    const cursor = $('#cursor');
-    if (!cursor || !canMove) return;
-
-    const label = $('.cursor__label', cursor);
-    document.body.classList.add('has-cursor');
-
-    // Zielposition (springt sofort) und Ist-Position (läuft nach).
-    let tx = window.innerWidth / 2, ty = window.innerHeight / 2;
-    let cx = tx, cy = ty;
+  function initMagnetic() {
+    if (!canMove) return;
 
     // Magnetische Elemente werden einmal eingesammelt statt bei jeder
     // Mausbewegung neu gesucht.
     const magnets = $$('[data-magnetic]').map(el => ({ el, dx: 0, dy: 0 }));
+    if (!magnets.length) return;
+
+    let tx = window.innerWidth / 2, ty = window.innerHeight / 2;
 
     document.addEventListener('mousemove', function (e) {
       tx = e.clientX;
       ty = e.clientY;
     }, { passive: true });
 
-    // Zeiger ausblenden, wenn die Maus das Fenster verlässt.
-    document.addEventListener('mouseleave', () => cursor.style.opacity = '0');
-    document.addEventListener('mouseenter', () => cursor.style.opacity = '');
-
     function frame() {
-      // 0.18 = angenehme Trägheit: sichtbar weich, aber nicht schwammig.
-      cx = lerp(cx, tx, 0.18);
-      cy = lerp(cy, ty, 0.18);
-      cursor.style.transform = 'translate3d(' + cx + 'px,' + cy + 'px,0)';
-
-      // Magnetische Buttons ziehen sich zum Zeiger, solange er in
-      // Reichweite ist. Die Bewegung ist gedeckelt, damit der Button
-      // nicht aus seinem Platz wandert.
+      // Die Bewegung ist gedeckelt, damit der Button nicht aus seinem
+      // Platz wandert.
       for (let i = 0; i < magnets.length; i++) {
         const m = magnets[i];
         const r = m.el.getBoundingClientRect();
@@ -85,24 +71,6 @@
       requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
-
-    // Zustand des Zeigers: Ring über Klickbarem, Ring mit Wort über Bildern.
-    const HOT = 'a, button, input, select, textarea, [data-magnetic], .price-row';
-
-    document.addEventListener('mouseover', function (e) {
-      const hot = e.target.closest(HOT);
-      cursor.classList.toggle('is-hot', !!hot);
-
-      const gal = e.target.closest('.gal__btn');
-      const tile = e.target.closest('.insta__tile, .philo__fig');
-      if (gal)       { label.textContent = 'Ansehen'; cursor.classList.add('has-label'); }
-      else if (tile) { label.textContent = 'Zoom';    cursor.classList.add('has-label'); }
-      else           { cursor.classList.remove('has-label'); }
-    });
-
-    // Beim Klick kurz zusammenziehen — taktiles Feedback ohne Ton.
-    document.addEventListener('mousedown', () => cursor.style.scale = '0.82');
-    document.addEventListener('mouseup',   () => cursor.style.scale = '');
   }
 
 
@@ -340,7 +308,7 @@
   function boot() {
     initTabs();       // immer – reine Bedienung, kein Effekt
     initLightbox();   // immer
-    initCursor();
+    initMagnetic();
     initTilt();
     initHeroCut();
     initPricePeek();

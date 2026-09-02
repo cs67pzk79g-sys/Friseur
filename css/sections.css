@@ -401,7 +401,7 @@
 .services__peek {
   position: fixed;
   top: 0; left: 0;
-  z-index: calc(var(--z-cursor) - 2);
+  z-index: calc(var(--z-overlay) - 2);
   width: 230px;
   aspect-ratio: 4 / 5;
   overflow: hidden;
