@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="de" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seite nicht gefunden — HAARSCHARF.</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0b0b0c">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+
+<style>
+  /* Die 404-Seite lebt vom Wortspiel und braucht deshalb kein eigenes
+     Stylesheet – sie borgt sich Tokens und Komponenten der Hauptseite
+     und setzt nur ihr eigenes Zentrierlayout. */
+  .oops {
+    min-height: 100svh;
+    display: grid;
+    place-content: center;
+    justify-items: start;
+    gap: 1.5rem;
+    max-width: var(--page-max);
+    margin-inline: auto;
+    padding: var(--gutter);
+  }
+
+  .oops__code {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(5rem, 22vw, 16rem);
+    line-height: 0.78;
+    letter-spacing: var(--tracking-display);
+    color: transparent;
+    -webkit-text-stroke: 1px var(--line);
+  }
+
+  .oops__title {
+    font-family: var(--font-editorial);
+    font-size: var(--fs-quote);
+    line-height: 1.15;
+    max-width: 20ch;
+  }
+  .oops__title em { color: var(--acid); font-style: italic; }
+
+  .oops__text {
+    font-size: var(--fs-body);
+    color: var(--bone-mute);
+    max-width: 48ch;
+  }
+
+  .oops__rule {
+    width: min(28rem, 100%);
+    height: 1px;
+    background: var(--line);
+  }
+</style>
+</head>
+<body>
+
+<main class="oops">
+  <p class="label label--acid">Fehler 404</p>
+  <p class="oops__code" aria-hidden="true">404</p>
+  <h1 class="oops__title">Hier haben wir <em>zu viel</em> abgeschnitten.</h1>
+  <div class="oops__rule"></div>
+  <p class="oops__text">
+    Diese Seite gibt es nicht — jedenfalls nicht mehr. Zurück zum Anfang,
+    dort steht alles: Leistungen, Team und die Terminbuchung.
+  </p>
+  <a class="btn btn--acid" href="./">Zur Startseite</a>
+</main>
+
+</body>
+</html>

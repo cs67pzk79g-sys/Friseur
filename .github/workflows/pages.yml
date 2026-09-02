@@ -1,0 +1,66 @@
+# ------------------------------------------------------------------
+# HAARSCHARF. — Veröffentlichung auf GitHub Pages
+#
+# Die Seite ist statisch: es gibt nichts zu bauen, nichts zu
+# installieren. Dieser Workflow sammelt nur die auszuliefernden Dateien
+# ein und übergibt sie an Pages.
+#
+# EINMALIG NÖTIG: im Repository unter
+#   Settings -> Pages -> Build and deployment -> Source
+# den Eintrag "GitHub Actions" wählen. Ohne diesen Schritt schlägt der
+# Workflow mit "Pages is not enabled" fehl.
+# ------------------------------------------------------------------
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    # Beim Umbenennen des Standard-Branches hier mit anpassen.
+    branches: [claude/create-repo-folder-1rn5c0]
+  workflow_dispatch:   # erlaubt manuelles Auslösen über die Actions-Oberfläche
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Läuft immer nur ein Deployment gleichzeitig. cancel-in-progress bleibt
+# aus, damit ein bereits laufendes Deployment sauber zu Ende geht,
+# statt halb ausgeliefert abzubrechen.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Auszuliefernde Dateien einsammeln
+        # Bewusst nur der Seiteninhalt: .claude/ und .github/ gehören
+        # zum Projekt, aber nicht auf den Webserver.
+        run: |
+          mkdir -p site
+          cp -r index.html impressum.html datenschutz.html 404.html \
+                robots.txt .nojekyll css js assets site/
+          echo "Ausgeliefert wird:"
+          du -sh site
+          find site -maxdepth 1 -mindepth 1 -printf '  %f\n' | sort
+
+      - name: Pages konfigurieren
+        uses: actions/configure-pages@v5
+
+      - name: Dateien hochladen
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Veröffentlichen
+        id: deployment
+        uses: actions/deploy-pages@v4

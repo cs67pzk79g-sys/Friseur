@@ -1,0 +1,11 @@
+# HAARSCHARF. — Demo-Projekt mit fiktivem Salon.
+# Bewusst von der Indexierung ausgenommen, damit der erfundene Betrieb
+# nicht als echtes Unternehmen in Suchergebnissen landet.
+# Soll die Seite gefunden werden: die beiden Disallow-Zeilen entfernen
+# und in index.html das <meta name="robots" content="noindex, follow">
+# löschen.
+
+User-agent: *
+Disallow: /
+
+Sitemap: https://cs67pzk79g-sys.github.io/Friseur/sitemap.xml
