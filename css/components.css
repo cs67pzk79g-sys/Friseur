@@ -1,0 +1,558 @@
+/* ------------------------------------------------------------------
+   HAARSCHARF. — Komponenten
+   Alles, was an mehr als einer Stelle vorkommt.
+   ------------------------------------------------------------------ */
+
+/* ═══════════════════════════════════════════════════════════ BUTTONS */
+
+.btn {
+  --btn-bg: transparent;
+  --btn-fg: var(--bone);
+  --btn-bd: var(--line);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  padding: 0.95em 1.9em;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border: 1px solid var(--btn-bd);
+  border-radius: var(--radius);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  isolation: isolate;
+  transition: color var(--t-fast) var(--ease),
+              border-color var(--t-fast) var(--ease),
+              transform var(--t-base) var(--spring);
+}
+
+/* Der Füll-Effekt: eine Fläche wächst von unten nach oben ins Feld.
+   Bewusst gerichtet (nicht "einfach einblenden") – das liest sich wie
+   ein Schnitt, der durchgezogen wird. */
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--acid);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform var(--t-base) var(--spring);
+}
+
+.btn:hover::after,
+.btn:focus-visible::after { transform: scaleY(1); }
+.btn:hover,
+.btn:focus-visible { color: var(--on-acid); border-color: var(--acid); }
+.btn:active { transform: scale(0.97); }
+
+.btn--acid {
+  --btn-bg: var(--acid);
+  --btn-fg: var(--on-acid);
+  --btn-bd: var(--acid);
+}
+/* Ein bereits grüner Button füllt sich mit Off-White. */
+.btn--acid::after { background: var(--bone); }
+.btn--acid:hover, .btn--acid:focus-visible { color: var(--on-acid); border-color: var(--bone); }
+
+.btn--ghost { --btn-bd: var(--line); }
+
+/* Deaktivierte Buttons werden neutral, nicht bloß transparent: ein
+   ausgegrautes Akzentgrün liest sich sonst als schmutziges Oliv. */
+.btn:disabled {
+  background: var(--ink-raise);
+  color: var(--bone-faint);
+  border-color: var(--line);
+  cursor: not-allowed;
+  transform: none;
+}
+.btn:disabled::after { transform: scaleY(0); }
+
+
+/* ══════════════════════════════════════════════════════════ CURSOR */
+
+/* Der eigene Zeiger ist ein Strich, keine Kugel: eine Klinge.
+   Er wird per JS nur eingeschaltet, wenn ein feiner Zeiger existiert. */
+.cursor {
+  position: fixed;
+  top: 0; left: 0;
+  z-index: var(--z-cursor);
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform;
+  transition: opacity var(--t-base) var(--ease);
+}
+
+body.has-cursor .cursor { opacity: 1; }
+body.has-cursor,
+body.has-cursor a,
+body.has-cursor button { cursor: none; }
+
+.cursor__blade {
+  display: block;
+  width: 46px;
+  height: 1px;
+  background: var(--acid);
+  transform: translate(-50%, -50%) rotate(-38deg);
+  transform-origin: center;
+  transition: width var(--t-base) var(--spring),
+              height var(--t-base) var(--spring),
+              background-color var(--t-fast) var(--ease),
+              transform var(--t-base) var(--spring);
+}
+
+/* Über interaktiven Elementen wird aus dem Strich ein offener Ring. */
+.cursor.is-hot .cursor__blade {
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--acid);
+  border-radius: 50%;
+  background: var(--acid-glow);
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+/* Über Bildern zusätzlich ein Wort im Ring ("Ansehen"). */
+.cursor__label {
+  position: absolute;
+  top: 0; left: 0;
+  transform: translate(-50%, -50%) scale(0.6);
+  font-size: 0.5625rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--acid);
+  opacity: 0;
+  white-space: nowrap;
+  transition: opacity var(--t-fast) var(--ease),
+              transform var(--t-base) var(--spring);
+}
+.cursor.has-label .cursor__label { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+
+/* ══════════════════════════════════════════════════════ NAVIGATION */
+
+.nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: var(--z-nav);
+  transition: background-color var(--t-base) var(--ease),
+              border-color var(--t-base) var(--ease),
+              backdrop-filter var(--t-base) var(--ease);
+  border-bottom: 1px solid transparent;
+}
+
+/* Zustandswechsel beim Scrollen: aus "schwebend" wird "Leiste". */
+.nav.is-stuck {
+  background: rgba(11, 11, 12, 0.72);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border-bottom-color: var(--line-soft);
+}
+
+.nav__inner {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 3rem);
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding: clamp(0.9rem, 1.6vw, 1.4rem) var(--gutter);
+}
+
+.nav__brand {
+  flex: none;
+  font-size: clamp(1.15rem, 1rem + 0.7vw, 1.6rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-inline-end: auto;
+}
+.nav__dot { color: var(--acid); }
+
+.nav__links {
+  display: flex;
+  gap: clamp(1rem, 2.2vw, 2.25rem);
+  font-size: var(--fs-sm);
+  color: var(--bone-mute);
+}
+
+/* Unterstreichung, die von links einfährt statt einfach zu erscheinen. */
+.nav__links a {
+  position: relative;
+  padding-block: 0.35rem;
+  transition: color var(--t-fast) var(--ease);
+}
+.nav__links a::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 100%; height: 1px;
+  background: var(--acid);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--t-base) var(--spring);
+}
+.nav__links a:hover,
+.nav__links a.is-current { color: var(--bone); }
+.nav__links a:hover::after,
+.nav__links a.is-current::after { transform: scaleX(1); }
+
+.nav__cta { padding: 0.7em 1.35em; }
+
+/* Burger: zwei Striche, die sich zum Kreuz schließen. */
+.burger {
+  display: none;
+  flex: none;
+  width: 44px; height: 44px;
+  position: relative;
+}
+.burger__bar {
+  position: absolute;
+  left: 11px;
+  width: 22px; height: 1.5px;
+  background: var(--bone);
+  transition: transform var(--t-base) var(--spring),
+              opacity var(--t-fast) var(--ease);
+}
+.burger__bar:nth-child(2) { transform: translateY(-4px); }
+.burger__bar:nth-child(3) { transform: translateY(4px); }
+.burger[aria-expanded="true"] .burger__bar:nth-child(2) { transform: rotate(45deg); }
+.burger[aria-expanded="true"] .burger__bar:nth-child(3) { transform: rotate(-45deg); }
+
+@media (max-width: 61.9375rem) {
+  .nav__links, .nav__cta { display: none; }
+  .burger { display: block; }
+}
+
+/* --- Mobiles Vollflächenmenü --- */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-nav) - 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2rem;
+  padding: 6rem var(--gutter) 3rem;
+  background: var(--ink);
+  opacity: 0;
+  transition: opacity var(--t-base) var(--ease);
+}
+.mobile-menu.is-open { opacity: 1; }
+
+.mobile-menu__nav { display: flex; flex-direction: column; gap: 0.15em; }
+.mobile-menu__nav a {
+  font-size: clamp(2.5rem, 12vw, 4.5rem);
+  line-height: 0.95;
+  color: var(--bone);
+  opacity: 0;
+  transform: translateY(0.4em);
+  transition: opacity var(--t-base) var(--ease) var(--d, 0ms),
+              transform var(--t-base) var(--spring) var(--d, 0ms),
+              color var(--t-fast) var(--ease);
+}
+.mobile-menu.is-open .mobile-menu__nav a { opacity: 1; transform: none; }
+.mobile-menu__nav a:active { color: var(--acid); }
+
+.mobile-menu__foot {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-sm);
+  color: var(--bone-mute);
+}
+
+
+/* ═════════════════════════════════════════════════════════ MARQUEE */
+
+.marquee {
+  overflow: hidden;
+  padding-block: 1.1rem;
+  border-block: 1px solid var(--line);
+  background: var(--ink-sunk);
+  user-select: none;
+}
+
+.marquee__track {
+  display: flex;
+  width: max-content;
+  animation: marquee 46s linear infinite;
+}
+
+.marquee__group {
+  display: flex;
+  align-items: center;
+  flex: none;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.6vw, 2.75rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  color: var(--bone);
+  padding-inline-end: 1.5rem;
+}
+/* Trenner zwischen den Wörtern: ein kleiner Akzentpunkt. */
+.marquee__group i {
+  flex: none;
+  width: 7px; height: 7px;
+  margin-inline: clamp(1rem, 2.4vw, 2.25rem);
+  background: var(--acid);
+  border-radius: 50%;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee:hover .marquee__track { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee__track { animation: none; }
+}
+
+
+/* ═══════════════════════════════════════════════════════════ KARTEN */
+
+/* Gemeinsame Bildbehandlung: leicht entsättigt und abgedunkelt, damit
+   die Fotos zur dunklen Bühne passen; beim Hover kommt die Farbe.  */
+.media-treat img {
+  filter: grayscale(0.32) contrast(1.06) brightness(0.86);
+  transition: filter var(--t-slow) var(--ease),
+              transform var(--t-slow) var(--ease);
+}
+.media-treat:hover img { filter: none; }
+
+/* 3D-Tilt: die Perspektive steckt in der transform-Funktion selbst
+   (perspective(...) statt perspective-Eigenschaft), damit jedes Element
+   unabhängig von seinem Elternteil kippen kann. js/interactions.js
+   schreibt die Transformation, wenn ein feiner Zeiger vorhanden ist. */
+[data-tilt] {
+  transform-style: preserve-3d;
+  transition: transform var(--t-base) var(--spring);
+}
+[data-tilt].is-tilting {
+  will-change: transform;
+  transition: none; /* während der Mausbewegung direkt folgen */
+}
+
+
+/* ════════════════════════════════════════════════════════════ TABS */
+
+.tab {
+  position: relative;
+  padding: 0.7em 0;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--bone-faint);
+  letter-spacing: 0.02em;
+  transition: color var(--t-fast) var(--ease);
+}
+.tab::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 100%; height: 1px;
+  background: var(--acid);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--t-base) var(--spring);
+}
+.tab:hover { color: var(--bone-mute); }
+.tab.is-active { color: var(--bone); }
+.tab.is-active::after { transform: scaleX(1); }
+
+
+/* ════════════════════════════════════════════════════════ FORMULAR */
+
+.field { display: flex; flex-direction: column; gap: 0.45rem; }
+
+.field label {
+  font-size: var(--fs-mono);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--bone-faint);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background: var(--ink-raise);
+  color: var(--bone);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-size: var(--fs-body);
+  transition: border-color var(--t-fast) var(--ease),
+              background-color var(--t-fast) var(--ease);
+}
+.field textarea { resize: vertical; min-height: 7rem; }
+
+.field input::placeholder,
+.field textarea::placeholder { color: var(--bone-faint); }
+
+.field input:hover,
+.field select:hover,
+.field textarea:hover { border-color: #34343a; }
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--acid);
+  background: var(--ink);
+}
+
+/* Fehlerzustand: Rahmen + Klartext. Farbe allein reicht nicht – wer
+   Rot nicht unterscheiden kann, braucht den Text.                   */
+.field.is-invalid input,
+.field.is-invalid select,
+.field.is-invalid textarea { border-color: #ff6b5e; }
+
+.field__err {
+  min-height: 1.1em;
+  font-size: var(--fs-sm);
+  color: #ff8f85;
+}
+.field__err:empty { min-height: 0; }
+
+/* Checkbox mit eigener Optik, aber echtem Input darunter. */
+.field--check {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem 0.85rem;
+  align-items: start;
+}
+.field--check input {
+  appearance: none;
+  width: 1.25rem; height: 1.25rem;
+  margin-top: 0.15rem;
+  padding: 0;
+  flex: none;
+  border: 1px solid var(--line);
+  background: var(--ink-raise);
+  cursor: pointer;
+  transition: background-color var(--t-fast) var(--ease),
+              border-color var(--t-fast) var(--ease);
+}
+.field--check input:checked { background: var(--acid); border-color: var(--acid); }
+.field--check input:checked::after {
+  content: "";
+  display: block;
+  width: 0.35rem; height: 0.7rem;
+  margin: 0.05rem auto 0;
+  border: solid var(--on-acid);
+  border-width: 0 2px 2px 0;
+  transform: rotate(43deg);
+}
+.field--check label {
+  font-size: var(--fs-sm);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--bone-mute);
+  line-height: 1.5;
+  cursor: pointer;
+}
+.field--check label a { color: var(--bone); text-decoration: underline; text-underline-offset: 3px; }
+.field--check label a:hover { color: var(--acid); }
+.field--check .field__err { grid-column: 1 / -1; }
+
+
+/* ═══════════════════════════════════════════════════════ LIGHTBOX */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-cursor) - 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 2vw, 2rem);
+  padding: clamp(1rem, 4vw, 3rem);
+  background: rgba(7, 7, 8, 0.94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  transition: opacity var(--t-base) var(--ease);
+}
+.lightbox.is-open { opacity: 1; }
+
+.lightbox__fig {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  max-width: min(72rem, 100%);
+  max-height: 100%;
+  transform: scale(0.97);
+  transition: transform var(--t-base) var(--spring);
+}
+.lightbox.is-open .lightbox__fig { transform: none; }
+
+.lightbox__fig img {
+  max-height: 78vh;
+  width: auto;
+  object-fit: contain;
+  border: 1px solid var(--line);
+}
+.lightbox__cap { color: var(--bone-mute); }
+
+.lightbox__close {
+  position: absolute;
+  top: clamp(0.75rem, 2vw, 1.75rem);
+  right: clamp(0.75rem, 2vw, 1.75rem);
+  width: 46px; height: 46px;
+  font-size: 1.75rem;
+  line-height: 1;
+  color: var(--bone-mute);
+  border: 1px solid var(--line);
+  transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+}
+.lightbox__nav {
+  flex: none;
+  width: 46px; height: 46px;
+  font-size: 1.1rem;
+  color: var(--bone-mute);
+  border: 1px solid var(--line);
+  transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+}
+.lightbox__close:hover, .lightbox__nav:hover { color: var(--acid); border-color: var(--acid); }
+
+@media (max-width: 47.9375rem) {
+  .lightbox__nav {
+    position: absolute;
+    bottom: 1.25rem;
+  }
+  .lightbox__nav--prev { left: 25%; }
+  .lightbox__nav--next { right: 25%; }
+}
+
+
+/* ══════════════════════════════════════════════ SCROLL-ANIMATIONEN */
+
+/* Grundzustand aller Elemente mit [data-reveal]; die Klasse .is-in
+   wird vom IntersectionObserver in js/core.js gesetzt.
+   Wichtig: Das Ausblenden passiert per JS-Klasse .reveal-ready, damit
+   ohne JavaScript nichts unsichtbar bleibt.                          */
+.js-reveal [data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 780ms var(--ease) var(--reveal-delay, 0ms),
+              transform 780ms var(--spring) var(--reveal-delay, 0ms);
+}
+.js-reveal [data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js-reveal [data-reveal] { opacity: 1; transform: none; transition: none; }
+}

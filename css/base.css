@@ -1,0 +1,189 @@
+/* ------------------------------------------------------------------
+   HAARSCHARF. — Reset, Grundtypografie, Hilfsklassen
+   ------------------------------------------------------------------ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+* { margin: 0; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  /* Die fixierte Navigation darf Anker-Ziele nicht verdecken. */
+  scroll-padding-top: 6rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+body {
+  background: var(--ink);
+  color: var(--bone);
+  font-family: var(--font-ui);
+  font-size: var(--fs-body);
+  line-height: 1.65;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* Solange die Intro-Animation läuft, soll nicht gescrollt werden. */
+body.is-loading { overflow: hidden; }
+
+img, picture, svg, video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* [hidden] muss jede display-Regel schlagen. Autoren-CSS gewinnt sonst
+   grundsätzlich gegen das Browser-Standardblatt – eine ausgeblendete
+   Overlay-Ebene wie die Lightbox (position: fixed, inset: 0) bliebe
+   dann unsichtbar im Weg liegen und würde sämtliche Klicks der Seite
+   abfangen. Genau diese Falle steckt hinter vielen "der Button geht
+   nicht"-Fehlern. */
+[hidden] { display: none !important; }
+
+input, button, textarea, select { font: inherit; color: inherit; }
+
+button {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+a { color: inherit; text-decoration: none; }
+
+ul, ol { list-style: none; padding: 0; }
+
+::selection {
+  background: var(--acid);
+  color: var(--on-acid);
+}
+
+/* --- Typografische Grundformen ------------------------------------ */
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 0.82;
+  letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
+}
+
+.serif {
+  font-family: var(--font-editorial);
+  font-weight: 400;
+  line-height: 1.18;
+  letter-spacing: -0.015em;
+}
+
+/* Kleine Versalien-Labels: das Bindeglied des ganzen Layouts.
+   Tauchen als Sektionsnummer, Kategorie und Meta-Zeile immer wieder auf. */
+.label {
+  font-family: var(--font-ui);
+  font-size: var(--fs-mono);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--bone-faint);
+}
+
+.label--acid { color: var(--acid); }
+
+.lead {
+  font-size: var(--fs-lead);
+  line-height: 1.5;
+  color: var(--bone-mute);
+  text-wrap: pretty;
+}
+
+/* --- Layout-Primitive ---------------------------------------------- */
+
+.shell {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  position: relative;
+  padding-block: var(--section-y);
+}
+
+/* Sektionskopf: Nummer + Titel, links ausgerichtet, mit Haarlinie.
+   Die Linie ist das wiederkehrende "Schnitt"-Motiv der Seite.        */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(0.75rem, 2vw, 2rem);
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: clamp(2.5rem, 5vw, 5rem);
+}
+
+.section-head__no {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.section-head__title {
+  font-size: var(--fs-h2);
+  margin-inline-end: auto;
+}
+
+.section-head__note {
+  flex: none;
+  max-width: 22ch;
+  font-size: var(--fs-sm);
+  color: var(--bone-mute);
+  line-height: 1.45;
+  text-align: right;
+}
+
+@media (max-width: 47.9375rem) {
+  .section-head { flex-wrap: wrap; }
+  .section-head__note { display: none; }
+}
+
+/* --- Barrierefreiheit ---------------------------------------------- */
+
+/* Sichtbarer, kräftiger Fokusring – nie wegoptimieren. Er ist für
+   Tastaturnutzer:innen das, was der Cursor für die Maus ist.          */
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--acid);
+  outline-offset: 3px;
+  border-radius: var(--radius);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Sprungmarke für Screenreader/Tastatur, taucht erst bei Fokus auf. */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: calc(var(--z-nav) + 10);
+  padding: 0.75rem 1.25rem;
+  background: var(--acid);
+  color: var(--on-acid);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  transform: translateY(-160%);
+  transition: transform var(--t-fast) var(--ease);
+}
+
+.skip-link:focus-visible { transform: translateY(0); }

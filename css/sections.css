@@ -1,0 +1,1151 @@
+/* ------------------------------------------------------------------
+   HAARSCHARF. — Sektionslayouts
+   Reihenfolge entspricht der Seite von oben nach unten.
+   ------------------------------------------------------------------ */
+
+/* ═══════════════════════════════════════════════════════════════ HERO */
+
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  align-content: end;
+  overflow: hidden;
+  padding-block-start: 8rem;
+}
+
+/* Das Medium ist absichtlich größer als der Ausschnitt: der Parallax
+   verschiebt es, ohne dass am Rand eine Kante sichtbar wird. */
+.hero__media {
+  position: absolute;
+  inset: -12% 0 -12% 0;
+  z-index: 0;
+  will-change: transform;
+}
+.hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 38%;
+  filter: grayscale(0.5) contrast(1.14) brightness(0.62);
+}
+
+/* Zwei übereinanderliegende Verläufe: einer dunkelt von unten ab
+   (damit Text sitzt), einer legt einen Hauch Akzentfarbe in die Tiefe. */
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, var(--ink) 2%, rgba(11,11,12,0.82) 34%, rgba(11,11,12,0.35) 68%, rgba(11,11,12,0.72) 100%),
+    radial-gradient(120% 80% at 78% 18%, var(--acid-glow), transparent 58%);
+}
+
+/* Feines Filmkorn – nimmt dem Foto das Digitale. Als reines CSS
+   erzeugt, also ohne zusätzlichen Request. */
+.hero__grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.045;
+  background-image:
+    repeating-linear-gradient(0deg,   #fff 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg,  #fff 0 1px, transparent 1px 3px);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.hero__inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding: 0 var(--gutter) clamp(3.5rem, 9vh, 6.5rem);
+}
+
+.hero__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--bone-mute);
+  margin-bottom: clamp(1.25rem, 3vh, 2.5rem);
+}
+.dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--acid);
+  box-shadow: 0 0 0 0 var(--acid);
+  animation: pulse 2.6s var(--ease) infinite;
+}
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(214,242,82,0.55); }
+  70%  { box-shadow: 0 0 0 9px rgba(214,242,82,0); }
+  100% { box-shadow: 0 0 0 0 rgba(214,242,82,0); }
+}
+@media (prefers-reduced-motion: reduce) { .dot { animation: none; } }
+
+/* --- Die Wortmarke: das Signature-Element -------------------------
+   Zwei identische Textebenen liegen deckungsgleich übereinander und
+   sind entlang einer flachen Diagonale gegenläufig beschnitten. Die
+   Hälften stehen um Haaresbreite versetzt – als wäre die Marke einmal
+   sauber durchgeschnitten und minimal verschoben worden.            */
+
+.hero__mark {
+  font-size: var(--fs-hero);
+  line-height: 0.78;
+  margin-bottom: clamp(1.5rem, 4vh, 3rem);
+}
+
+/* fit-content ist hier wichtig: die Schnittkante wird über inset: 0
+   gezogen. Wäre der Block so breit wie die Spalte, ragte der Strich
+   rechts über das Wort hinaus und sähe aus wie ein Versehen. */
+.cut {
+  position: relative;
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  isolation: isolate;
+}
+
+.cut__half { display: block; }
+
+/* Die untere Hälfte liegt deckungsgleich über der oberen. */
+.cut__half--bot {
+  position: absolute;
+  inset: 0;
+}
+
+/* Der Schnitt verläuft von 55 % links auf 45 % rechts – eine flache,
+   aber deutlich sichtbare Diagonale. */
+.cut__half--top { clip-path: polygon(0 0, 100% 0, 100% 45%, 0 55%); }
+.cut__half--bot { clip-path: polygon(0 55%, 100% 45%, 100% 100%, 0 100%); }
+
+/* Der Versatz sitzt auf dem inneren <span>, damit die Intro-Animation
+   (auf .cut__half) und die Mausreaktion (hier) sich nicht ins Gehege
+   kommen. --cut-x wird von js/interactions.js gesetzt. */
+.cut__half > span {
+  display: block;
+  transform: translateX(calc(var(--cut-x, 0px) * var(--dir, 1) + var(--rest, 0em)));
+  transition: transform 240ms var(--ease);
+}
+.cut__half--top > span { --dir: -1; --rest: -0.012em; }
+.cut__half--bot > span { --dir:  1; --rest:  0.012em; }
+
+/* Die Schnittkante selbst: eine Akzent-Haarlinie exakt auf der
+   Diagonale. Das Elternelement beschneidet, das Kind fährt hindurch. */
+.cut__line {
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(0 55%, 100% 45%, 100% calc(45% + 2px), 0 calc(55% + 2px));
+  pointer-events: none;
+}
+.cut__line::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--acid);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+/* Intro: erst fährt die Klinge durch, dann fallen die Hälften an
+   ihren Platz. Wird durch .is-cut auf <body> ausgelöst. */
+.is-cut .cut__line::before { animation: blade 900ms var(--ease) 120ms forwards; }
+.is-cut .cut__half--top    { animation: cutTop 1100ms var(--spring) 340ms both; }
+.is-cut .cut__half--bot    { animation: cutBot 1100ms var(--spring) 340ms both; }
+
+/* Die Klinge fährt einmal durch und lässt eine feine Kante stehen –
+   sie erklärt dauerhaft, warum die beiden Hälften versetzt sind. */
+@keyframes blade {
+  0%   { transform: scaleX(0); opacity: 1; }
+  60%  { transform: scaleX(1); opacity: 1; }
+  100% { transform: scaleX(1); opacity: 0.34; }
+}
+@keyframes cutTop {
+  from { transform: translate(-0.06em, -0.12em); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+@keyframes cutBot {
+  from { transform: translate(0.06em, 0.12em); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-cut .cut__line::before,
+  .is-cut .cut__half--top,
+  .is-cut .cut__half--bot { animation: none; }
+  .is-cut .cut__line::before { transform: scaleX(1); }
+  .cut__half > span { transition: none; }
+}
+
+.hero__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  padding-top: clamp(1.25rem, 3vh, 2rem);
+  border-top: 1px solid var(--line);
+}
+
+.hero__claim {
+  font-size: var(--fs-quote);
+  max-width: 24ch;
+  color: var(--bone);
+}
+.hero__claim em { color: var(--acid); font-style: italic; }
+
+.hero__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+.hero__scroll {
+  position: absolute;
+  left: 50%;
+  bottom: 1.1rem;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  transform: translateX(-50%);
+  color: var(--bone-faint);
+  transition: color var(--t-fast) var(--ease);
+}
+.hero__scroll:hover { color: var(--acid); }
+.hero__scroll-line {
+  display: block;
+  width: 1px; height: 46px;
+  background: linear-gradient(to bottom, var(--acid), transparent);
+  animation: drop 2.2s var(--ease) infinite;
+  transform-origin: top;
+}
+@keyframes drop {
+  0%, 100% { transform: scaleY(0.35); opacity: 0.4; }
+  50%      { transform: scaleY(1);    opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) { .hero__scroll-line { animation: none; } }
+
+@media (max-width: 47.9375rem) {
+  .hero__scroll { display: none; }
+  .hero__foot { flex-direction: column; align-items: flex-start; }
+  .hero__claim { max-width: none; }
+}
+
+
+/* ═════════════════════════════════════════════════════════ PHILOSOPHIE */
+
+.philo__grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: clamp(1.5rem, 3vw, 3.5rem) clamp(1rem, 2.5vw, 2.5rem);
+  align-items: start;
+}
+
+.philo__quote {
+  grid-column: 1 / 9;
+  grid-row: 1;
+  font-size: var(--fs-h2);
+  line-height: 1.02;
+  color: var(--bone);
+}
+.philo__quote em { color: var(--acid); }
+
+/* Die hohe Spalte füllt beide Zeilen aus, statt eine feste Bildproportion
+   zu erzwingen. Dadurch schließt sie unten bündig mit dem Textblock ab
+   und es entsteht keine tote Fläche daneben. */
+.philo__fig--tall {
+  grid-column: 9 / 13;
+  grid-row: 1 / span 2;
+  align-self: stretch;
+  min-height: clamp(22rem, 40vw, 42rem);
+  overflow: hidden;
+}
+
+.philo__text {
+  grid-column: 1 / 6;
+  grid-row: 2;
+  display: grid;
+  gap: 1.25rem;
+  color: var(--bone-mute);
+  max-width: 46ch;
+}
+
+.philo__fig--wide {
+  grid-column: 4 / 13;
+  grid-row: 3;
+  overflow: hidden;
+}
+.philo__fig--wide img { aspect-ratio: 16 / 9; object-fit: cover; width: 100%; }
+
+.philo__fig img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(0.4) contrast(1.05) brightness(0.82);
+  transition: filter var(--t-slow) var(--ease), transform var(--t-slow) var(--ease);
+}
+.philo__fig:hover img { filter: grayscale(0) contrast(1.02) brightness(0.95); transform: scale(1.02); }
+.philo__fig figcaption { padding-top: 0.7rem; color: var(--bone-faint); }
+
+/* Drei Zahlen als Beleg statt Behauptung. */
+.philo__facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-top: 0.75rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--line);
+}
+.philo__facts li { display: grid; gap: 0.35rem; }
+.philo__facts strong {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-weight: 800;
+  line-height: 0.85;
+  letter-spacing: -0.03em;
+  color: var(--acid);
+}
+.philo__facts span {
+  font-size: var(--fs-sm);
+  line-height: 1.35;
+  color: var(--bone-faint);
+}
+
+@media (max-width: 61.9375rem) {
+  .philo__quote    { grid-column: 1 / -1; }
+  .philo__fig--tall{ grid-column: 1 / 7;  grid-row: 2; min-height: 0; aspect-ratio: 3/4; }
+  .philo__text     { grid-column: 7 / 13; grid-row: 2; }
+  .philo__fig--wide{ grid-column: 1 / -1; grid-row: 3; }
+}
+@media (max-width: 47.9375rem) {
+  .philo__fig--tall{ grid-column: 1 / -1; grid-row: 2; aspect-ratio: 4/3; }
+  .philo__text     { grid-column: 1 / -1; grid-row: 3; max-width: none; }
+  .philo__fig--wide{ grid-row: 4; }
+  .philo__facts    { grid-template-columns: 1fr; gap: 1rem; }
+  .philo__facts li { grid-template-columns: 4rem 1fr; align-items: center; gap: 1rem; }
+}
+
+
+/* ══════════════════════════════════════════════════════════ LEISTUNGEN */
+
+.services { position: relative; }
+
+.services__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.25rem, 3vw, 2.75rem);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.services__panel { display: none; }
+.services__panel.is-active { display: block; animation: fadeUp 500ms var(--ease) both; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .services__panel.is-active { animation: none; }
+}
+
+/* Ohne JavaScript sind alle Panels sichtbar – die Preise bleiben
+   in jedem Fall lesbar. */
+.no-js .services__panel { display: block; }
+
+.price-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.35fr) 6.5rem 7rem;
+  align-items: baseline;
+  gap: 0.35rem 1.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem) clamp(0.5rem, 1.4vw, 1.25rem);
+  border-bottom: 1px solid var(--line-soft);
+  transition: background-color var(--t-base) var(--ease);
+}
+
+/* Beim Überfahren fährt links eine Akzentlinie hoch und die Zeile
+   rückt einen Hauch nach rechts – dieselbe Geste wie beim Button. */
+.price-row::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--acid);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform var(--t-base) var(--spring);
+}
+.price-row:hover { background: var(--ink-raise); }
+.price-row:hover::before { transform: scaleY(1); }
+.price-row:hover .price-row__name { color: var(--acid); transform: translateX(6px); }
+
+.price-row__name {
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  transition: color var(--t-fast) var(--ease), transform var(--t-base) var(--spring);
+}
+.price-row__desc  { font-size: var(--fs-sm); color: var(--bone-mute); line-height: 1.45; }
+.price-row__dur   { text-align: right; white-space: nowrap; }
+.price-row__price {
+  text-align: right;
+  font-size: var(--fs-lead);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Schwebende Bildvorschau am Cursor. */
+.services__peek {
+  position: fixed;
+  top: 0; left: 0;
+  z-index: calc(var(--z-cursor) - 2);
+  width: 230px;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.9) rotate(-3deg);
+  transition: opacity var(--t-base) var(--ease), transform var(--t-base) var(--spring);
+  border: 1px solid var(--line);
+}
+.services__peek.is-on { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(-3deg); }
+.services__peek img { width: 100%; height: 100%; object-fit: cover; }
+
+.services__note {
+  margin-top: clamp(1.75rem, 3vw, 2.75rem);
+  padding: 1.15rem 1.35rem;
+  border-left: 2px solid var(--acid);
+  background: var(--ink-raise);
+  font-size: var(--fs-sm);
+  color: var(--bone-mute);
+  max-width: 60ch;
+}
+
+@media (max-width: 61.9375rem) {
+  .price-row {
+    grid-template-columns: 1fr auto;
+    gap: 0.3rem 1rem;
+  }
+  .price-row__name  { grid-column: 1; }
+  .price-row__price { grid-column: 2; grid-row: 1; }
+  .price-row__desc  { grid-column: 1 / -1; }
+  .price-row__dur   { grid-column: 1 / -1; text-align: left; }
+}
+
+
+/* ════════════════════════════════════════════════════════════════ TEAM */
+
+.team__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.25rem, 2.5vw, 2.5rem);
+}
+
+/* Versetzte Höhen statt braver Reihe. */
+.team-card:nth-child(2) { margin-top: clamp(1rem, 3vw, 3rem); }
+.team-card:nth-child(3) { margin-top: clamp(2rem, 6vw, 6rem); }
+
+.team-card__media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--ink-raise);
+}
+.team-card__media img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: grayscale(0.85) contrast(1.1) brightness(0.78);
+  transition: filter var(--t-slow) var(--ease), transform var(--t-slow) var(--ease);
+}
+.team-card:hover .team-card__media img {
+  filter: grayscale(0) contrast(1.02) brightness(0.95);
+  transform: scale(1.04);
+}
+
+/* Akzentrahmen, der beim Hover einfährt. */
+.team-card__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--acid);
+  opacity: 0;
+  transform: scale(1.04);
+  transition: opacity var(--t-base) var(--ease), transform var(--t-base) var(--spring);
+  pointer-events: none;
+}
+.team-card:hover .team-card__media::after { opacity: 1; transform: scale(1); }
+
+.team-card__body { padding-top: 1.25rem; display: grid; gap: 0.45rem; }
+.team-card__name { font-size: var(--fs-h3); }
+.team-card__spec { font-size: var(--fs-sm); color: var(--bone-mute); }
+
+/* Die Bio fährt beim Hover auf – auf Touch ist sie immer offen. */
+.team-card__bio {
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+  color: var(--bone-faint);
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows var(--t-base) var(--ease), opacity var(--t-base) var(--ease);
+}
+.team-card__bio > * { overflow: hidden; }
+.team-card:hover .team-card__bio,
+.team-card:focus-within .team-card__bio { grid-template-rows: 1fr; opacity: 1; }
+
+/* grid-template-rows-Animation braucht einen inneren Block. Da wir
+   direkt Text im <p> haben, arbeiten wir stattdessen mit max-height:
+   robuster über Browser hinweg. */
+@supports not (grid-template-rows: 0fr) {
+  .team-card__bio { max-height: 0; overflow: hidden; }
+  .team-card:hover .team-card__bio { max-height: 12rem; }
+}
+
+@media (hover: none) {
+  .team-card__bio { grid-template-rows: 1fr; opacity: 1; max-height: none; }
+}
+
+@media (max-width: 61.9375rem) {
+  .team__grid { grid-template-columns: repeat(2, 1fr); }
+  .team-card:nth-child(3) { margin-top: 0; }
+}
+@media (max-width: 39.9375rem) {
+  .team__grid { grid-template-columns: 1fr; }
+  .team-card:nth-child(2), .team-card:nth-child(3) { margin-top: 0; }
+  .team-card__bio { grid-template-rows: 1fr; opacity: 1; }
+}
+
+
+/* ═════════════════════════════════════════════════════════════ GALERIE */
+
+/* Vier Spalten mit feiner Zeilenrasterung: durch unterschiedliche
+   Zeilen-Spans entsteht ein Masonry-Bild ohne Lücken. */
+.gallery__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: clamp(22px, 2.4vw, 34px);
+  grid-auto-flow: dense;
+  gap: clamp(0.5rem, 1.2vw, 1.15rem);
+}
+
+.gal { position: relative; grid-row: span 7; }
+.gal--a { grid-column: span 2; grid-row: span 9;  }
+.gal--b { grid-row: span 12; }
+.gal--c { grid-row: span 7;  }
+.gal--d { grid-row: span 12; }
+.gal--e { grid-row: span 8;  }
+.gal--f { grid-row: span 11; }
+.gal--g { grid-row: span 7;  }
+.gal--h { grid-column: span 2; grid-row: span 8; }
+
+.gal__btn {
+  display: block;
+  position: relative;
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--ink-raise);
+}
+/* Kräftig entsättigt und abgedunkelt, damit auch Motive mit hellem
+   Hintergrund in der dunklen Bühne bleiben. Die volle Farbe ist die
+   Belohnung beim Überfahren. */
+.gal__btn img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: grayscale(0.78) contrast(1.1) brightness(0.68);
+  transition: filter var(--t-slow) var(--ease), transform var(--t-slow) var(--ease);
+}
+.gal__btn:hover img,
+.gal__btn:focus-visible img {
+  filter: grayscale(0) contrast(1.02) brightness(0.98);
+  transform: scale(1.05);
+}
+
+.gal__cap {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 2.5rem 0.9rem 0.8rem;
+  text-align: left;
+  color: var(--bone);
+  background: linear-gradient(to top, rgba(7,7,8,0.92), transparent);
+  opacity: 0;
+  transform: translateY(0.5rem);
+  transition: opacity var(--t-base) var(--ease), transform var(--t-base) var(--spring);
+}
+.gal__btn:hover .gal__cap,
+.gal__btn:focus-visible .gal__cap { opacity: 1; transform: none; }
+
+@media (max-width: 61.9375rem) {
+  .gallery__grid { grid-template-columns: repeat(2, 1fr); }
+  .gal--a, .gal--h { grid-column: span 2; }
+}
+@media (max-width: 39.9375rem) {
+  .gallery__grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
+  .gal, .gal--a, .gal--h { grid-column: 1; grid-row: auto; aspect-ratio: 4/3; }
+  .gal--b, .gal--d, .gal--f { aspect-ratio: 3/4; }
+  .gal__cap { opacity: 1; transform: none; }
+}
+
+
+/* ═════════════════════════════════════════════════════════════ BUCHUNG */
+
+.booking__panel {
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(180deg, var(--ink-raise), var(--ink));
+  overflow: hidden;
+}
+
+/* --- Fortschrittsanzeige --- */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid var(--line);
+}
+.step {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: clamp(0.9rem, 1.8vw, 1.25rem) clamp(0.75rem, 1.8vw, 1.5rem);
+  font-size: var(--fs-sm);
+  color: var(--bone-faint);
+  transition: color var(--t-base) var(--ease), background-color var(--t-base) var(--ease);
+}
+.step + .step { border-left: 1px solid var(--line); }
+.step__no {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 1.65rem; height: 1.65rem;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: var(--fs-mono);
+  font-weight: 600;
+  transition: background-color var(--t-base) var(--ease),
+              color var(--t-base) var(--ease),
+              border-color var(--t-base) var(--ease);
+}
+.step.is-active { color: var(--bone); background: rgba(214,242,82,0.04); }
+.step.is-active .step__no { border-color: var(--acid); color: var(--acid); }
+.step.is-done { color: var(--bone-mute); }
+.step.is-done .step__no { background: var(--acid); border-color: var(--acid); color: var(--on-acid); }
+.step.is-done .step__no::after { content: "✓"; font-size: 0.7rem; }
+.step.is-done .step__no { font-size: 0; }
+
+@media (max-width: 47.9375rem) {
+  .step__label { display: none; }
+  .step { justify-content: center; }
+}
+
+.booking__body { padding: clamp(1.5rem, 3.5vw, 3rem); min-height: 21rem; }
+
+.bstep { display: none; }
+.bstep.is-active { display: block; animation: fadeUp 460ms var(--ease) both; }
+@media (prefers-reduced-motion: reduce) { .bstep.is-active { animation: none; } }
+
+.bstep__title {
+  font-family: var(--font-editorial);
+  font-size: var(--fs-quote);
+  font-weight: 400;
+  line-height: 1.15;
+  margin-bottom: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+/* --- Auswahlkacheln --- */
+.choice-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: 0.75rem;
+}
+.choice-grid--people { grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); }
+
+/* Feste Spaltenzahl auf großen Schirmen: sechs Kacheln in zwei Reihen
+   zu drei, statt fünf plus einer einsamen in der zweiten Zeile. */
+@media (min-width: 62rem) {
+  .choice-grid          { grid-template-columns: repeat(3, 1fr); }
+  .choice-grid--people  { grid-template-columns: repeat(4, 1fr); }
+}
+
+.choice {
+  position: relative;
+  display: grid;
+  gap: 0.3rem;
+  padding: 1.1rem 1.2rem;
+  text-align: left;
+  border: 1px solid var(--line);
+  background: var(--ink);
+  transition: border-color var(--t-fast) var(--ease),
+              background-color var(--t-fast) var(--ease),
+              transform var(--t-base) var(--spring);
+}
+.choice:hover { border-color: #3a3a41; transform: translateY(-2px); }
+.choice[aria-checked="true"] {
+  border-color: var(--acid);
+  background: rgba(214,242,82,0.06);
+}
+/* Markierungshaken oben rechts – zusätzlich zur Farbe, damit die
+   Auswahl nicht allein am Farbton hängt. */
+.choice[aria-checked="true"]::after {
+  content: "";
+  position: absolute;
+  top: 0.85rem; right: 1rem;
+  width: 0.4rem; height: 0.75rem;
+  border: solid var(--acid);
+  border-width: 0 2px 2px 0;
+  transform: rotate(43deg);
+}
+.choice__name { font-weight: 600; font-size: var(--fs-body); padding-right: 1.25rem; }
+.choice__meta { font-size: var(--fs-sm); color: var(--bone-faint); }
+
+.choice--person { padding-top: 1.2rem; }
+.choice--person img {
+  width: 3.25rem; height: 3.25rem;
+  object-fit: cover;
+  border-radius: 50%;
+  filter: grayscale(0.7) brightness(0.9);
+  margin-bottom: 0.5rem;
+  transition: filter var(--t-base) var(--ease);
+}
+.choice--person[aria-checked="true"] img,
+.choice--person:hover img { filter: none; }
+.choice__glyph {
+  display: grid;
+  place-items: center;
+  width: 3.25rem; height: 3.25rem;
+  border-radius: 50%;
+  border: 1px dashed var(--line);
+  color: var(--bone-faint);
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* --- Datumsleiste --- */
+.datepick { margin-bottom: clamp(1.5rem, 3vw, 2.25rem); }
+.datepick__head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+}
+.datepick__nav {
+  width: 2.1rem; height: 2.1rem;
+  border: 1px solid var(--line);
+  color: var(--bone-mute);
+  transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+}
+.datepick__nav:hover:not(:disabled) { color: var(--acid); border-color: var(--acid); }
+.datepick__nav:disabled { opacity: 0.3; cursor: not-allowed; }
+.datepick__month { color: var(--bone-mute); }
+
+.datepick__days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+.day {
+  display: grid;
+  gap: 0.2rem;
+  place-items: center;
+  padding: 0.7rem 0.25rem;
+  border: 1px solid var(--line);
+  background: var(--ink);
+  transition: border-color var(--t-fast) var(--ease),
+              background-color var(--t-fast) var(--ease),
+              color var(--t-fast) var(--ease);
+}
+.day__dow  { font-size: var(--fs-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--bone-faint); }
+.day__num  { font-size: var(--fs-lead); font-weight: 500; font-variant-numeric: tabular-nums; }
+.day:hover:not(:disabled) { border-color: #3a3a41; }
+.day[aria-checked="true"] { border-color: var(--acid); background: rgba(214,242,82,0.07); }
+.day[aria-checked="true"] .day__num { color: var(--acid); }
+.day:disabled { opacity: 0.28; cursor: not-allowed; }
+.day:disabled .day__num { text-decoration: line-through; }
+
+/* --- Zeitfenster --- */
+.timepick__title { margin-bottom: 0.75rem; color: var(--bone-mute); }
+.timepick__slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(5.25rem, 1fr));
+  gap: 0.5rem;
+}
+.slot {
+  padding: 0.7rem 0.4rem;
+  border: 1px solid var(--line);
+  background: var(--ink);
+  font-size: var(--fs-sm);
+  font-variant-numeric: tabular-nums;
+  transition: border-color var(--t-fast) var(--ease),
+              background-color var(--t-fast) var(--ease),
+              color var(--t-fast) var(--ease);
+}
+.slot:hover:not(:disabled) { border-color: var(--acid); color: var(--acid); }
+.slot[aria-checked="true"] { background: var(--acid); border-color: var(--acid); color: var(--on-acid); font-weight: 600; }
+.slot:disabled { opacity: 0.25; cursor: not-allowed; text-decoration: line-through; }
+.timepick__hint { margin-top: 0.85rem; font-size: var(--fs-sm); color: var(--bone-faint); }
+
+/* --- Zusammenfassung --- */
+.summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+  gap: 1.25rem;
+  padding: 1.5rem;
+  border: 1px solid var(--line);
+  background: var(--ink);
+}
+.summary > div { display: grid; gap: 0.35rem; }
+.summary dd { font-size: var(--fs-lead); font-weight: 500; }
+
+.booking__done {
+  display: grid;
+  justify-items: start;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid var(--acid);
+  background: rgba(214,242,82,0.05);
+}
+.booking__check {
+  display: grid;
+  place-items: center;
+  width: 2.5rem; height: 2.5rem;
+  border-radius: 50%;
+  background: var(--acid);
+}
+.booking__check::after {
+  content: "";
+  width: 0.5rem; height: 1rem;
+  border: solid var(--on-acid);
+  border-width: 0 2.5px 2.5px 0;
+  transform: rotate(43deg) translate(-1px, -2px);
+}
+.booking__done-title { font-size: var(--fs-h3); }
+.booking__done-text { font-size: var(--fs-sm); color: var(--bone-mute); max-width: 56ch; }
+.booking__done-text strong { color: var(--bone); }
+
+.booking__foot {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: clamp(1rem, 2.5vw, 1.5rem) clamp(1.5rem, 3.5vw, 3rem);
+  border-top: 1px solid var(--line);
+  background: var(--ink-sunk);
+}
+.booking__hint {
+  flex: 1;
+  text-align: center;
+  font-size: var(--fs-sm);
+  color: var(--bone-faint);
+}
+@media (max-width: 47.9375rem) {
+  .booking__hint { display: none; }
+  .booking__foot .btn { flex: 1; }
+}
+
+
+/* ═══════════════════════════════════════════════════════════ INSTAGRAM */
+
+.insta__handle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 2.75rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  transition: color var(--t-fast) var(--ease);
+}
+.insta__handle:hover { color: var(--acid); }
+.insta__at { color: var(--acid); }
+.insta__follow {
+  padding: 0.4em 0.9em;
+  border: 1px solid var(--line);
+  color: var(--bone-mute);
+  transition: border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+}
+.insta__handle:hover .insta__follow { border-color: var(--acid); color: var(--acid); }
+
+.insta__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(0.4rem, 0.9vw, 0.85rem);
+}
+.insta__tile {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--ink-raise);
+}
+.insta__tile img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: grayscale(0.4) brightness(0.85);
+  transition: filter var(--t-base) var(--ease), transform var(--t-base) var(--ease);
+}
+.insta__tile:hover img { filter: none; transform: scale(1.06); }
+
+/* Overlay mit Likes/Kommentaren wie im echten Feed. */
+.insta__meta {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 0.25rem;
+  font-size: var(--fs-sm);
+  color: var(--bone);
+  background: rgba(7,7,8,0.62);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity var(--t-base) var(--ease);
+}
+.insta__meta::before { content: "♥"; text-align: center; color: var(--acid); font-size: 1.1rem; }
+.insta__tile:hover .insta__meta { opacity: 1; }
+
+@media (max-width: 47.9375rem) {
+  .insta__grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+
+/* ══════════════════════════════════════════════════════════════ STIMMEN */
+
+.voices__grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: clamp(2.5rem, 6vw, 6rem) clamp(1rem, 2.5vw, 2.5rem);
+}
+/* Bewusst versetzt statt Slider: drei Zitate, drei Positionen. */
+.voice--1 { grid-column: 1 / 8; }
+.voice--2 { grid-column: 6 / 13; }
+.voice--3 { grid-column: 3 / 10; }
+
+.voice__quote {
+  position: relative;
+  font-size: var(--fs-quote);
+  color: var(--bone);
+  padding-left: clamp(1.25rem, 3vw, 2.5rem);
+  border-left: 1px solid var(--line);
+}
+.voice__quote::before {
+  content: "„";
+  position: absolute;
+  left: 0.1em; top: -0.35em;
+  font-size: 2.2em;
+  line-height: 1;
+  color: var(--acid);
+  opacity: 0.28;
+}
+.voice__quote em { color: var(--acid); font-style: italic; }
+
+.voice__by {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 1rem;
+  margin-top: 1.1rem;
+  padding-left: clamp(1.25rem, 3vw, 2.5rem);
+}
+.voice__name { font-weight: 600; }
+
+@media (max-width: 61.9375rem) {
+  .voice--1, .voice--2, .voice--3 { grid-column: 1 / -1; }
+}
+
+
+/* ═════════════════════════════════════════════════════════════ STANDORT */
+
+.place__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 3.5vw, 3.5rem);
+  align-items: start;
+}
+
+.map { position: relative; border: 1px solid var(--line); overflow: hidden; }
+/* Die Karte behält ihre Proportion, statt auf eine feste Höhe
+   beschnitten zu werden – sonst fallen Beschriftungen weg. */
+.map__svg { width: 100%; height: auto; aspect-ratio: 800 / 620; display: block; }
+.map__street { font-family: var(--font-ui); font-size: 13px; fill: #6f6c66; letter-spacing: 0.06em; }
+.map__green  { font-family: var(--font-ui); font-size: 13px; fill: #4a5c37; letter-spacing: 0.06em; text-anchor: middle; }
+.map__u      { font-family: var(--font-ui); font-size: 15px; font-weight: 700; fill: #7d94ff; }
+.map__pin    { font-family: var(--font-display); font-size: 17px; font-weight: 800; fill: #0b0b0c; letter-spacing: -0.01em; }
+
+.map__pulse {
+  fill: none;
+  stroke: var(--acid);
+  stroke-width: 1.5;
+  opacity: 0;
+  transform-origin: center;
+  animation: ping 3s var(--ease) infinite;
+}
+.map__pulse--2 { animation-delay: 1.5s; }
+@keyframes ping {
+  0%   { transform: scale(0.4); opacity: 0.9; }
+  100% { transform: scale(2.3); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .map__pulse { animation: none; } }
+
+/* Auf der aufgehellten Fläche --ink-raise reicht --bone-faint nicht mehr
+   für 4.5:1 – hier also eine Stufe heller. */
+.map__cap {
+  padding: 0.7rem 0.9rem;
+  border-top: 1px solid var(--line);
+  color: var(--bone-mute);
+  background: var(--ink-raise);
+}
+
+.place__info { display: grid; gap: clamp(1.75rem, 3vw, 2.75rem); }
+.place__block { display: grid; gap: 0.75rem; }
+.place__address {
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  font-style: normal;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+}
+.place__hint { font-size: var(--fs-sm); color: var(--bone-faint); }
+
+.hours { display: grid; gap: 0.1rem; }
+.hours li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--line-soft);
+  font-size: var(--fs-sm);
+  color: var(--bone-mute);
+}
+.hours li.is-closed { color: var(--bone-faint); }
+/* Der heutige Tag wird von js/core.js markiert. */
+.hours li.is-today {
+  color: var(--bone);
+  font-weight: 600;
+  border-bottom-color: var(--acid);
+}
+.hours li.is-today span:first-child::before {
+  content: "";
+  display: inline-block;
+  width: 5px; height: 5px;
+  margin-right: 0.55rem;
+  vertical-align: middle;
+  border-radius: 50%;
+  background: var(--acid);
+}
+
+.place__contact { display: grid; gap: 0.4rem; font-size: var(--fs-lead); }
+.place__contact a { transition: color var(--t-fast) var(--ease); }
+.place__contact a:hover { color: var(--acid); }
+
+@media (max-width: 61.9375rem) {
+  .place__grid { grid-template-columns: 1fr; }
+}
+
+
+/* ═════════════════════════════════════════════════════════════ KONTAKT */
+
+.contact {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  margin-top: clamp(3.5rem, 7vw, 7rem);
+  padding-top: clamp(2.5rem, 5vw, 4.5rem);
+  border-top: 1px solid var(--line);
+}
+.contact__title { font-size: var(--fs-h2); margin-bottom: 1.25rem; }
+.contact__text { color: var(--bone-mute); max-width: 38ch; }
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+  align-content: start;
+}
+.field--wide { grid-column: 1 / -1; }
+
+.form__foot {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+}
+.form__status { font-size: var(--fs-sm); color: var(--bone-mute); max-width: 40ch; }
+.form__status.is-ok { color: var(--acid); }
+
+@media (max-width: 61.9375rem) {
+  .contact { grid-template-columns: 1fr; }
+}
+@media (max-width: 39.9375rem) {
+  .form { grid-template-columns: 1fr; }
+}
+
+
+/* ══════════════════════════════════════════════════════════════ FOOTER */
+
+.footer {
+  padding-block: clamp(3.5rem, 7vw, 6rem) 2rem;
+  border-top: 1px solid var(--line);
+  background: var(--ink-sunk);
+}
+
+.footer__top {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  gap: clamp(1.75rem, 3vw, 3rem);
+  padding-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+.footer__col { display: grid; gap: 0.85rem; align-content: start; }
+.footer__col ul { display: grid; gap: 0.35rem; }
+.footer__col a,
+.footer__address {
+  font-size: var(--fs-sm);
+  font-style: normal;
+  color: var(--bone-mute);
+  line-height: 1.7;
+  transition: color var(--t-fast) var(--ease);
+}
+.footer__col a:hover { color: var(--acid); }
+
+/* Wortmarke als Abbinder: randlos, groß, ruhig. */
+.footer__mark {
+  font-size: clamp(3rem, 15.5vw, 14rem);
+  line-height: 0.76;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--line);
+  text-align: center;
+  user-select: none;
+  padding-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.footer__bottom {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 1.25rem 2.5rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--line-soft);
+  font-size: var(--fs-sm);
+  color: var(--bone-faint);
+}
+.footer__badge {
+  display: inline-block;
+  margin-right: 0.5rem;
+  padding: 0.2em 0.65em;
+  background: var(--acid);
+  color: var(--on-acid);
+  font-size: var(--fs-mono);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  vertical-align: 0.1em;
+}
+.footer__note { max-width: 62ch; line-height: 1.6; }
+.footer__credit { line-height: 1.6; }
+
+@media (max-width: 47.9375rem) {
+  .footer__bottom { grid-template-columns: 1fr; }
+}
