@@ -972,10 +972,16 @@
 /* Die Karte behält ihre Proportion, statt auf eine feste Höhe
    beschnitten zu werden – sonst fallen Beschriftungen weg. */
 .map__svg { width: 100%; height: auto; aspect-ratio: 800 / 620; display: block; }
-.map__street { font-family: var(--font-ui); font-size: 13px; fill: #6f6c66; letter-spacing: 0.06em; }
-.map__green  { font-family: var(--font-ui); font-size: 13px; fill: #4a5c37; letter-spacing: 0.06em; text-anchor: middle; }
+/* Die Beschriftungen der Karte sind Inhalt, keine Dekoration: sie müssen
+   lesbar sein. Früher stand hier #6f6c66 — das ergab auf der hellsten
+   Fläche der Karte (dem Straßenband #26262a) nur 2,9:1 und lag damit
+   unter WCAG AA. Die Farbe kommt jetzt aus dem Token-System. */
+.map__street { font-family: var(--font-ui); font-size: 13px; fill: var(--bone-mute); letter-spacing: 0.06em; }
+/* Das Parklabel bleibt grün, damit es die Fläche benennt statt nur
+   darauf zu liegen — aber hell genug für 4,5:1 auf dem Grünton. */
+.map__green  { font-family: var(--font-ui); font-size: 13px; fill: #8a9c78; letter-spacing: 0.06em; text-anchor: middle; }
 .map__u      { font-family: var(--font-ui); font-size: 15px; font-weight: 700; fill: #7d94ff; }
-.map__pin    { font-family: var(--font-display); font-size: 17px; font-weight: 800; fill: #0b0b0c; letter-spacing: -0.01em; }
+.map__pin    { font-family: var(--font-display); font-size: 17px; font-weight: 800; fill: var(--ink); letter-spacing: -0.01em; }
 /* Pin und Beschriftungsfahne holen sich die Akzentfarbe aus dem Token,
    statt sie im SVG-Markup festzuschreiben. */
 .map__acid   { fill: var(--acid); }
