@@ -151,6 +151,68 @@ ul, ol { list-style: none; padding: 0; }
   .section-head__note { display: none; }
 }
 
+/* --- Zwei bewusste Ausnahmen vom Abschnittskopf ---------------------
+   Acht gleiche Köpfe hintereinander lesen sich als Raster, und genau das
+   soll die Seite nicht sein. Zwei Abschnitte brechen deshalb aus — jeder
+   mit einem eigenen Grund, nicht bloß der Abwechslung wegen. Sechs
+   behalten die Grundform, damit der Bruch als Absicht lesbar bleibt und
+   nicht als Unordnung.                                                */
+
+/* (1) Galerie: der Kopf stellt sich hochkant an den linken Rand.
+   Gedreht wird über writing-mode, nicht über transform — auf dem Element
+   sitzt data-reveal, und dessen Einblend-Animation schreibt transform.
+   Ein rotate() hier würde davon überschrieben. */
+@media (min-width: 62rem) {
+  .section-head--side {
+    writing-mode: vertical-rl;
+    align-items: center;
+    justify-content: flex-start;
+    gap: clamp(1rem, 2vw, 2rem);
+    border-bottom: 0;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    position: sticky;
+    /* 6rem entspricht scroll-padding-top aus dem :root-Block, damit der
+       Kopf beim Ansteuern nicht unter die Navigation rutscht. */
+    top: 7rem;
+  }
+  /* Hochkant wirkt die volle Displaygröße erschlagend: sie würde die
+     Spalte doppelt so breit machen wie die Bildunterschriften daneben. */
+  .section-head--side .section-head__title {
+    font-size: clamp(2.25rem, 3.6vw, 3.5rem);
+    margin-inline-end: 0;
+  }
+  .section-head--side .section-head__note {
+    max-width: none;
+    text-align: left;
+  }
+}
+
+/* (2) Stimmen: gespiegelt und leise. Die Haarlinie wandert nach oben,
+   der Titel schrumpft auf Fließtextgröße — das Zitat darunter ist hier
+   die eigentliche Schlagzeile. */
+@media (min-width: 48rem) {
+  .section-head--quiet {
+    flex-direction: row-reverse;
+    align-items: baseline;
+    border-bottom: 0;
+    border-top: 1px solid var(--line);
+    padding-bottom: 0;
+    padding-top: 1.1rem;
+    margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  }
+  .section-head--quiet .section-head__title {
+    font-size: var(--fs-h3);
+    margin-inline-end: 0;
+  }
+  /* Die Notiz füllt jetzt die freie linke Seite, statt rechts zu kleben. */
+  .section-head--quiet .section-head__note {
+    margin-inline-end: auto;
+    max-width: 34ch;
+    text-align: left;
+  }
+}
+
 /* --- Barrierefreiheit ---------------------------------------------- */
 
 /* Sichtbarer, kräftiger Fokusring – nie wegoptimieren. Er ist für

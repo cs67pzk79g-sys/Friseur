@@ -206,7 +206,13 @@ Geprüft und eingehalten:
   Pos1/Ende), Lightbox mit Fokusfalle und Fokusrückgabe
 - Sichtbarer Fokusring auf allen 68 fokussierbaren Elementen
 - **Kontrast: alle Text-/Hintergrundpaare ≥ 4,5:1** (bzw. 3:1 bei großem Text),
-  automatisiert über alle drei Seiten geprüft
+  automatisiert über alle drei Seiten geprüft — inklusive der Beschriftungen
+  im Karten-SVG. Die lagen zunächst außerhalb der Prüfung, weil der erste
+  Prüflauf nur das normale DOM abging und `<text>`-Elemente im SVG dabei
+  übersprang; sie erreichten dadurch unbemerkt nur 2,9:1 bis 3,4:1.
+- **Touch-Ziele nach WCAG 2.2 (2.5.8)** geprüft: kein Ziel unter 24 px verletzt
+  die Abstandsausnahme
+- **Kein horizontaler Überlauf bis hinunter zu 320 px** Viewport-Breite
 - Auswahlzustände zusätzlich über Haken-Symbole, nicht allein über Farbe
 - Statusmeldungen über `aria-live`, Datumsschaltflächen mit vollständigem
   `aria-label` („Mittwoch, 3. September“ statt „Mi 03“)
