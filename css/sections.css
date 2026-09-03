@@ -579,6 +579,20 @@
   .gal__cap { opacity: 1; transform: none; }
 }
 
+/* Die Galerie bekommt ihre eigene Hülle: links eine schmale Schiene für
+   den hochkant gestellten Kopf, rechts das Bildraster. Die Schiene ist
+   so breit wie die gedrehte Zeile hoch ist — mehr braucht sie nicht.
+   minmax(0, 1fr) statt 1fr, damit das Bildraster schrumpfen darf und
+   die Spalte nicht über den Bildschirmrand hinausdrückt. */
+@media (min-width: 62rem) {
+  .gallery__shell {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(1.5rem, 3.5vw, 4rem);
+    align-items: start;
+  }
+}
+
 @media (max-width: 61.9375rem) {
   .gallery__grid { grid-template-columns: repeat(2, 1fr); }
   .gal--a, .gal--h { grid-column: span 2; }
@@ -1113,6 +1127,26 @@
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
   gap: clamp(1.75rem, 3vw, 3rem);
   padding-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+/* Der Footer war die letzte Stelle mit vier exakt gleich breiten Spalten —
+   also genau das ordentliche Raster, das die Seite sonst überall meidet.
+   Jetzt trägt die Adresse als eigentliche Information die breite Spalte,
+   die drei Linklisten rücken als Gruppe nach rechts und setzen eine
+   Stufe tiefer an. Das ergibt zwei Grundlinien statt einer geraden Kante. */
+@media (min-width: 48rem) {
+  .footer__top {
+    grid-template-columns: minmax(0, 2.6fr) repeat(3, minmax(0, 1fr));
+  }
+  .footer__col:first-child { padding-inline-end: clamp(2rem, 6vw, 7rem); }
+  /* Die Anschrift ist im Footer der einzige Inhalt, den jemand wirklich
+     sucht. Sie darf deshalb aus dem Sekundärton heraustreten. */
+  .footer__col:first-child .footer__address {
+    font-size: var(--fs-body);
+    color: var(--bone);
+    line-height: 1.6;
+  }
+  .footer__col:not(:first-child) { padding-top: 2.25rem; }
 }
 .footer__col { display: grid; gap: 0.85rem; align-content: start; }
 .footer__col ul { display: grid; gap: 0.35rem; }
